@@ -20,9 +20,6 @@
             </div>
             <div class="flex items-center gap-3">
                 <a href="#apps" class="text-sm text-gray-600 hover:text-emerald-600 transition hidden sm:block">Aplikasi</a>
-                <a href="/login" class="text-sm font-medium bg-gray-900 text-white px-4 py-2 rounded-xl hover:bg-emerald-600 transition-all duration-200">
-                    Masuk Portal
-                </a>
             </div>
         </div>
     </div>
@@ -67,30 +64,70 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                 </svg>
             </a>
-            <a href="/login" class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white font-medium px-8 py-3.5 rounded-2xl hover:bg-white/20 transition-all duration-200">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
-                </svg>
-                Masuk Portal
-            </a>
         </div>
     </div>
 </section>
 
-<!-- Announcement Bar -->
+<!-- Announcement Popup Modal -->
 <?php if (!empty($announcements)): ?>
-<section class="bg-emerald-50 border-y border-emerald-100 py-3">
-    <div class="max-w-7xl mx-auto px-4">
-        <div class="flex items-center gap-3 overflow-hidden">
-            <span class="flex-shrink-0 bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full">INFO</span>
-            <div class="overflow-hidden" x-data="{ i: 0, items: <?= json_encode(array_column($announcements, 'title')) ?> }" x-init="setInterval(() => i = (i + 1) % items.length, 5000)">
-                <template x-for="(item, idx) in items" :key="idx">
-                    <p x-show="i === idx" x-transition class="text-sm text-emerald-800 truncate" x-text="item"></p>
-                </template>
+<div x-data="{ open: true }" x-show="open" x-cloak
+     class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+     x-transition:enter="transition ease-out duration-300"
+     x-transition:enter-start="opacity-0"
+     x-transition:enter-end="opacity-100"
+     x-transition:leave="transition ease-in duration-200"
+     x-transition:leave-start="opacity-100"
+     x-transition:leave-end="opacity-0">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full max-h-[80vh] overflow-hidden"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+         x-transition:enter-end="opacity-100 scale-100 translate-y-0">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-emerald-600 to-teal-600 px-6 py-5 text-white relative">
+            <h3 class="text-lg font-bold pr-8">Pengumuman</h3>
+            <p class="text-emerald-100 text-sm mt-0.5">Informasi terbaru untuk Anda</p>
+            <button @click="open = false"
+                    class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+        <!-- Content -->
+        <div class="px-6 py-5 overflow-y-auto max-h-[50vh] space-y-4">
+            <?php foreach ($announcements as $announcement): ?>
+            <div class="border border-gray-100 rounded-2xl p-4 hover:shadow-md transition-shadow">
+                <div class="flex items-start gap-3">
+                    <div class="w-2 h-2 rounded-full mt-2 flex-shrink-0
+                        <?php if ($announcement['priority'] === 'high'): ?>bg-red-500
+                        <?php elseif ($announcement['priority'] === 'medium'): ?>bg-amber-500
+                        <?php else: ?>bg-emerald-500<?php endif; ?>">
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h4 class="font-bold text-gray-900 text-sm mb-1"><?= \App\Helpers\H::e($announcement['title']) ?></h4>
+                        <?php if (!empty($announcement['content'])): ?>
+                        <p class="text-sm text-gray-600 leading-relaxed"><?= nl2br(\App\Helpers\H::e($announcement['content'])) ?></p>
+                        <?php endif; ?>
+                        <p class="text-xs text-gray-400 mt-2">
+                            <?= date('d M Y', strtotime($announcement['created_at'])) ?>
+                            <?php if ($announcement['priority'] === 'high'): ?>
+                                <span class="ml-2 text-red-500 font-medium">Penting</span>
+                            <?php endif; ?>
+                        </p>
+                    </div>
+                </div>
             </div>
+            <?php endforeach; ?>
+        </div>
+        <!-- Footer -->
+        <div class="px-6 py-4 border-t border-gray-100 bg-gray-50">
+            <button @click="open = false"
+                    class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded-xl transition-colors">
+                Mengerti
+            </button>
         </div>
     </div>
-</section>
+</div>
 <?php endif; ?>
 
 <!-- Statistics -->

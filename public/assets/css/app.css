@@ -1,3 +1,6 @@
+/* Alpine.js x-cloak: hide until Alpine initializes */
+[x-cloak] { display: none !important; }
+
 /* ─── Tailwind v3 compat for v2 pre-built ─── */
 
 /* Emerald color palette */
