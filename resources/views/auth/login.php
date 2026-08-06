@@ -3,7 +3,7 @@
  * Login page.
  */
 ?>
-<?php \App\Core\View::layout('main', 'auth.login_content', get_defined_vars()); ?>
+<?php \App\Core\View::layout('auth', 'auth.login_content', get_defined_vars()); ?>
 <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-900 via-emerald-800 to-teal-900 p-4 relative overflow-hidden">
     <div class="absolute inset-0 opacity-10">
         <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
