@@ -21,7 +21,6 @@
                 <h3 class="font-semibold text-white mb-4">Tautan Cepat</h3>
                 <ul class="space-y-2 text-sm">
                     <li><a href="/" class="hover:text-emerald-400 transition">Portal Utama</a></li>
-                    <li><a href="/login" class="hover:text-emerald-400 transition">Masuk</a></li>
                 </ul>
             </div>
             <div>
