@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 return [
-    'lifetime' => (int) (getenv('SESSION_LIFETIME') ?: 120),
-    'name' => getenv('SESSION_NAME') ?: 'portal_smpmu',
-    'secure' => getenv('APP_ENV') === 'production',
+    'lifetime' => (int) ($_ENV['SESSION_LIFETIME'] ?? 120),
+    'name' => $_ENV['SESSION_NAME'] ?? 'portal_smpmu',
+    'secure' => ($_ENV['APP_ENV'] ?? '') === 'production',
     'httponly' => true,
     'samesite' => 'Lax',
 ];

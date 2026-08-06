@@ -8,11 +8,40 @@ declare(strict_types=1);
 
 namespace App\Core;
 
-use Dotenv\Dotenv;
-
 class App
 {
     /**
+     * Load .env file without putenv (shared hosting safe).
+     */
+    private static function loadEnv(string $path): void
+    {
+        $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        if ($lines === false) {
+            return;
+        }
+
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if ($line === '' || $line[0] === '#') {
+                continue;
+            }
+
+            $pos = strpos($line, '=');
+            if ($pos === false) {
+                continue;
+            }
+
+            $key = trim(substr($line, 0, $pos));
+            $value = trim(substr($line, $pos + 1));
+
+            if (strlen($value) > 1 && (($value[0] === '"' && $value[strlen($value) - 1] === '"') || ($value[0] === "'" && $value[strlen($value) - 1] === "'"))) {
+                $value = substr($value, 1, -1);
+            }
+
+            $_ENV[$key] = $value;
+            $_SERVER[$key] = $value;
+        }
+    }    /**
      * Bootstrap the application.
      */
     public static function init(): void
@@ -20,8 +49,7 @@ class App
         $baseDir = dirname(__DIR__, 2);
 
         if (file_exists($baseDir . '/.env')) {
-            $dotenv = Dotenv::createImmutable($baseDir);
-            $dotenv->safeLoad();
+            self::loadEnv($baseDir . '/.env');
         }
 
         $appConfig = require $baseDir . '/config/app.php';
