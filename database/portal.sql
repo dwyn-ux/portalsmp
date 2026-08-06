@@ -137,7 +137,7 @@ CREATE TABLE `audit_logs` (
 
 -- Seed admin user (password: admin123)
 INSERT INTO `users` (`name`, `email`, `password`, `role`) VALUES
-('Administrator', 'admin@smpmuashidiq.sch.id', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin');
+('Administrator', 'admin@smpmuashidiq.sch.id', '$2y$12$XX5WHnX3olfQs5g/y2ALs.T90qj7Qn0fKzn8hQ15R/jSKPSRbaH1i', 'admin');
 
 -- Seed categories
 INSERT INTO `categories` (`name`, `slug`, `icon`, `color`, `sort_order`) VALUES
