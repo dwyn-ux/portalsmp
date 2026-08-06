@@ -26,44 +26,76 @@
 </nav>
 
 <!-- Hero Section -->
-<section class="relative min-h-[90vh] flex items-center justify-center overflow-hidden pt-16">
+<section class="relative min-h-[90vh] flex items-center overflow-hidden pt-16">
     <!-- Background -->
     <div class="absolute inset-0 bg-gradient-to-br from-emerald-900 via-emerald-800 to-teal-900"></div>
-    <div class="absolute inset-0 opacity-10">
-        <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-width="0.5"/>
-                </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#grid)"/>
-        </svg>
-    </div>
+    <div class="absolute inset-0 opacity-[0.07] bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1564769625905-50e93615e769?w=1200&q=80')"></div>
     <div class="absolute top-20 left-10 w-72 h-72 bg-emerald-400/20 rounded-full blur-3xl"></div>
     <div class="absolute bottom-20 right-10 w-96 h-96 bg-teal-400/15 rounded-full blur-3xl"></div>
 
-    <div class="relative z-10 text-center px-4 max-w-4xl mx-auto">
-        <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white/90 text-sm px-4 py-2 rounded-full mb-8">
-            <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
-            Sistem Digital Terintegrasi
-        </div>
-        <h1 class="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white mb-6 leading-tight tracking-tight">
-            Portal Digital
-        </h1>
-        <p class="text-xl sm:text-2xl text-emerald-100/90 font-medium mb-3">
-            SMP Muhammadiyah Unggulan Ashidiq
-        </p>
-        <p class="text-sm sm:text-base text-emerald-200/70 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Berkemajuan &bull; Mandiri &bull; Berprestasi<br>
-            Menguasai Teknologi Digital &bull; Berjiwa Qur'ani
-        </p>
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a href="#apps" class="group inline-flex items-center gap-2 bg-white text-emerald-700 font-semibold px-8 py-3.5 rounded-2xl hover:bg-emerald-50 transition-all duration-200 shadow-xl shadow-black/10">
-                Jelajahi Aplikasi
-                <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                </svg>
-            </a>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-16">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <!-- Left: Text -->
+            <div>
+                <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white/90 text-sm px-4 py-2 rounded-full mb-8">
+                    <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+                    Sistem Digital Terintegrasi
+                </div>
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight tracking-tight">
+                    Portal Digital
+                </h1>
+                <p class="text-xl sm:text-2xl text-emerald-100/90 font-medium mb-3">
+                    SMP Muhammadiyah Unggulan Ashidiq
+                </p>
+                <p class="text-sm sm:text-base text-emerald-200/70 mb-10 max-w-lg leading-relaxed">
+                    Berkemajuan &bull; Mandiri &bull; Berprestasi<br>
+                    Menguasai Teknologi Digital &bull; Berjiwa Qur'ani
+                </p>
+                <div class="flex flex-col sm:flex-row items-start gap-4">
+                    <a href="#apps" class="group inline-flex items-center gap-2 bg-white text-emerald-700 font-semibold px-8 py-3.5 rounded-2xl hover:bg-emerald-50 transition-all duration-200 shadow-xl shadow-black/10">
+                        Jelajahi Aplikasi
+                        <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right: Image -->
+            <div class="relative hidden lg:block">
+                <div class="relative rounded-3xl overflow-hidden shadow-2xl">
+                    <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600&q=80" alt="Sekolah" class="w-full h-[480px] object-cover" loading="lazy">
+                    <div class="absolute inset-0 bg-gradient-to-t from-emerald-900/30 to-transparent"></div>
+                </div>
+                <!-- Floating badge: Digital -->
+                <div class="absolute -bottom-5 -left-5 bg-white rounded-2xl p-4 shadow-xl">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
+                            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-gray-900">Digital Learning</p>
+                            <p class="text-xs text-gray-500">Terintegrasi</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Floating badge: Prestasi -->
+                <div class="absolute -top-4 -right-4 bg-white rounded-2xl p-4 shadow-xl">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
+                            <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-gray-900">Berprestasi</p>
+                            <p class="text-xs text-gray-500">Unggulan</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
@@ -136,16 +168,16 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
             <?php
             $statItems = [
-                ['label' => 'Total Aplikasi', 'value' => $stats['total_apps'] ?? 0, 'icon' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"/>'],
-                ['label' => 'Jumlah Guru', 'value' => $stats['total_guru'] ?? 0, 'icon' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/>'],
-                ['label' => 'Jumlah Siswa', 'value' => $stats['total_siswa'] ?? 0, 'icon' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>'],
-                ['label' => 'Sistem Terintegrasi', 'value' => $stats['total_systems'] ?? 0, 'icon' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>'],
+                ['label' => 'Total Aplikasi', 'value' => $stats['total_apps'] ?? 0, 'color' => 'emerald', 'icon' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>'],
+                ['label' => 'Jumlah Guru', 'value' => $stats['total_guru'] ?? 0, 'color' => 'blue', 'icon' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>'],
+                ['label' => 'Jumlah Siswa', 'value' => $stats['total_siswa'] ?? 0, 'color' => 'violet', 'icon' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"/>'],
+                ['label' => 'Sistem Terintegrasi', 'value' => $stats['total_systems'] ?? 0, 'color' => 'amber', 'icon' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>'],
             ];
             ?>
             <?php foreach ($statItems as $stat): ?>
             <div class="bg-gray-50 rounded-2xl p-5 text-center border border-gray-100 hover:shadow-lg transition-shadow duration-300">
-                <div class="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center mx-auto mb-3">
-                    <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-10 h-10 bg-<?= $stat['color'] ?>-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <svg class="w-5 h-5 text-<?= $stat['color'] ?>-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <?= $stat['icon'] ?>
                     </svg>
                 </div>
