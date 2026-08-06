@@ -1,0 +1,4 @@
+RewriteEngine On
+
+# Block access to sensitive directories
+RewriteRule ^(app|config|database|routes|storage|resources|vendor)/ - [F,L]
