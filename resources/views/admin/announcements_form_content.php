@@ -1,0 +1,66 @@
+<?php
+$isEdit = !empty($announcement);
+$formAction = $isEdit ? '/admin/announcements/update?id=' . $announcement['id'] : '/admin/announcements/store';
+?>
+<div class="mb-6">
+    <h1 class="text-2xl font-extrabold text-gray-900"><?= $isEdit ? 'Edit Pengumuman' : 'Tambah Pengumuman' ?></h1>
+</div>
+
+<div class="bg-white rounded-2xl border border-gray-200/60 p-6 max-w-2xl">
+    <form method="POST" action="<?= $formAction ?>" class="space-y-5">
+        <?= \App\Core\Csrf::field() ?>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Judul *</label>
+            <input type="text" name="title" required value="<?= \App\Helpers\H::e($announcement['title'] ?? '') ?>"
+                   class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Konten *</label>
+            <textarea name="content" rows="4" required
+                      class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 outline-none"><?= \App\Helpers\H::e($announcement['content'] ?? '') ?></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Prioritas</label>
+                <select name="priority" class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+                    <option value="low" <?= ($announcement['priority'] ?? '') === 'low' ? 'selected' : '' ?>>Rendah</option>
+                    <option value="medium" <?= ($announcement['priority'] ?? 'medium') === 'medium' ? 'selected' : '' ?>>Sedang</option>
+                    <option value="high" <?= ($announcement['priority'] ?? '') === 'high' ? 'selected' : '' ?>>Tinggi</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Mulai</label>
+                <input type="datetime-local" name="starts_at" value="<?= \App\Helpers\H::e(substr($announcement['starts_at'] ?? '', 0, 16)) ?>"
+                       class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Berakhir</label>
+                <input type="datetime-local" name="expires_at" value="<?= \App\Helpers\H::e(substr($announcement['expires_at'] ?? '', 0, 16)) ?>"
+                       class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+            </div>
+        </div>
+
+        <div class="flex items-center gap-6">
+            <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" name="is_active" value="1" <?= ($announcement['is_active'] ?? 1) ? 'checked' : '' ?>
+                       class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
+                <span class="text-sm text-gray-700">Aktif</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" name="is_running" value="1" <?= ($announcement['is_running'] ?? 0) ? 'checked' : '' ?>
+                       class="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500">
+                <span class="text-sm text-gray-700">Running Text</span>
+            </label>
+        </div>
+
+        <div class="flex items-center gap-3 pt-4 border-t border-gray-100">
+            <button type="submit" class="bg-emerald-600 text-white text-sm font-medium px-6 py-2.5 rounded-xl hover:bg-emerald-700 transition shadow-lg shadow-emerald-500/25">
+                <?= $isEdit ? 'Perbarui' : 'Simpan' ?>
+            </button>
+            <a href="/admin/announcements" class="text-sm text-gray-500 hover:text-gray-700 transition">Batal</a>
+        </div>
+    </form>
+</div>
