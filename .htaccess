@@ -1,8 +1,14 @@
 RewriteEngine On
 
-# Serve existing files/dirs directly
+# Serve existing files directly
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# Serve files from public/ directory
+RewriteCond %{DOCUMENT_ROOT}/public%{REQUEST_URI} -f
+RewriteRule ^ public%{REQUEST_URI} [L]
+
+# Route everything else to index.php
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-
-# Route everything to index.php (PHP router handles all routes)
 RewriteRule ^ index.php [L,QSA]
