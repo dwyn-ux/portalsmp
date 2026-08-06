@@ -4,22 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Admin Panel - Portal Digital SMP Muhammadiyah Unggulan Ashidiq">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23059669'/><text y='.9em' x='50' text-anchor='middle' font-size='65' fill='white'>A</text></svg>">
     <title><?= \App\Helpers\H::e($title ?? 'Admin') ?></title>
-    <link rel="stylesheet" href="/assets/css/app.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config={theme:{extend:{colors:{primary:{50:'#ecfdf5',100:'#d1fae5',200:'#a7f3d0',300:'#6ee7b7',400:'#34d399',500:'#10b981',600:'#059669',700:'#047857',800:'#065f46',900:'#064e3b'}}}}}</script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body class="bg-gray-50 text-gray-900 antialiased min-h-screen" x-data="{ sidebarOpen: true, mobileMenu: false }">
     <!-- Top Navigation -->
     <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200/60 h-16">
         <div class="flex items-center justify-between h-full px-4 lg:px-6">
-            <!-- Mobile menu button -->
             <button @click="mobileMenu = !mobileMenu" class="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                 </svg>
             </button>
-
-            <!-- Logo -->
             <div class="flex items-center gap-3">
                 <div class="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center">
                     <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -28,8 +27,6 @@
                 </div>
                 <span class="font-bold text-gray-800 hidden sm:block">Admin Panel</span>
             </div>
-
-            <!-- Right side -->
             <div class="flex items-center gap-3">
                 <a href="/" target="_blank" class="text-sm text-gray-500 hover:text-emerald-600 transition flex items-center gap-1">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
