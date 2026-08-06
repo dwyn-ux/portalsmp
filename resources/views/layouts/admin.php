@@ -76,7 +76,6 @@
             </div>
         </aside>
 
-        <!-- Mobile Sidebar Overlay -->
         <div x-show="mobileMenu" x-transition:enter="transition-opacity ease-linear duration-200"
              x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
              x-transition:leave="transition-opacity ease-linear duration-200"
