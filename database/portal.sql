@@ -4,8 +4,17 @@
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
--- Users table
+SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS `audit_logs`;
+DROP TABLE IF EXISTS `visitor_logs`;
+DROP TABLE IF EXISTS `applications`;
+DROP TABLE IF EXISTS `announcements`;
+DROP TABLE IF EXISTS `settings`;
 DROP TABLE IF EXISTS `users`;
+DROP TABLE IF EXISTS `categories`;
+SET FOREIGN_KEY_CHECKS = 1;
+
+-- Users table
 CREATE TABLE `users` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
@@ -23,7 +32,6 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Categories table
-DROP TABLE IF EXISTS `categories`;
 CREATE TABLE `categories` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(100) NOT NULL,
@@ -40,7 +48,6 @@ CREATE TABLE `categories` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Applications table
-DROP TABLE IF EXISTS `applications`;
 CREATE TABLE `applications` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
@@ -69,7 +76,6 @@ CREATE TABLE `applications` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Announcements table
-DROP TABLE IF EXISTS `announcements`;
 CREATE TABLE `announcements` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(255) NOT NULL,
@@ -89,7 +95,6 @@ CREATE TABLE `announcements` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Settings table
-DROP TABLE IF EXISTS `settings`;
 CREATE TABLE `settings` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `key` VARCHAR(100) NOT NULL,
@@ -103,7 +108,6 @@ CREATE TABLE `settings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Visitor logs
-DROP TABLE IF EXISTS `visitor_logs`;
 CREATE TABLE `visitor_logs` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `ip_address` VARCHAR(45) NOT NULL,
@@ -118,7 +122,6 @@ CREATE TABLE `visitor_logs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Audit logs
-DROP TABLE IF EXISTS `audit_logs`;
 CREATE TABLE `audit_logs` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_id` INT UNSIGNED DEFAULT NULL,
