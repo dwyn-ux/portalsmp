@@ -49,14 +49,22 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8">
                 <!-- Left: Type -->
                 <div class="lg:col-span-7">
-                    <p style="color:#fbbf24;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1.5rem;font-weight:600">
+                    <!-- Gold accent line -->
+                    <div style="width:40px;height:3px;background:#fbbf24;margin-bottom:1.5rem"></div>
+                    <p style="color:#fbbf24;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1rem;font-weight:600">
                         Muhammadiyah Unggulan Ashidiq
                     </p>
-                    <h1 style="color:#f0fdf4;font-size:clamp(40px,8vw,80px);line-height:0.95;font-weight:800;letter-spacing:-0.03em;margin-bottom:2rem">
+                    <h1 style="color:#f0fdf4;font-size:clamp(40px,8vw,80px);line-height:0.95;font-weight:800;letter-spacing:-0.03em;margin-bottom:1.5rem">
                         Semua yang<br>
                         dibutuhkan,<br>
                         <span style="color:#fbbf24">satu pintu.</span>
                     </h1>
+                    <!-- Decorative separator -->
+                    <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem">
+                        <div style="width:24px;height:1px;background:rgba(255,255,255,0.15)"></div>
+                        <span style="color:rgba(255,255,255,0.3);font-size:10px;letter-spacing:0.2em;text-transform:uppercase">Since 2025</span>
+                        <div style="width:24px;height:1px;background:rgba(255,255,255,0.15)"></div>
+                    </div>
                     <p style="color:rgba(255,255,255,0.55);font-size:16px;line-height:1.6;max-width:420px;margin-bottom:2.5rem">
                         Aplikasi, data, dan informasi sekolah. Tidak perlu kemana-mana.
                     </p>
@@ -68,23 +76,28 @@
 
                 <!-- Right: Stats -->
                 <div class="lg:col-span-5 lg:flex lg:items-end">
-                    <div style="width:100%">
+                    <div style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);padding:24px;border-radius:12px">
                         <?php
                         $statItems = [
-                            ['label' => 'Aplikasi', 'value' => $stats['total_apps'] ?? 0, 'color' => '#fbbf24'],
-                            ['label' => 'Guru', 'value' => $stats['total_guru'] ?? 0, 'color' => '#f0fdf4'],
-                            ['label' => 'Siswa', 'value' => $stats['total_siswa'] ?? 0, 'color' => '#f0fdf4'],
-                            ['label' => 'Sistem', 'value' => $stats['total_systems'] ?? 0, 'color' => '#fbbf24'],
+                            ['label' => 'Aplikasi', 'value' => $stats['total_apps'] ?? 0, 'color' => '#fbbf24', 'sub' => 'Digital'],
+                            ['label' => 'Guru', 'value' => $stats['total_guru'] ?? 0, 'color' => '#f0fdf4', 'sub' => 'Aktif'],
+                            ['label' => 'Siswa', 'value' => $stats['total_siswa'] ?? 0, 'color' => '#f0fdf4', 'sub' => 'Terdaftar'],
+                            ['label' => 'Sistem', 'value' => $stats['total_systems'] ?? 0, 'color' => '#fbbf24', 'sub' => 'Terkoneksi'],
                         ];
                         ?>
                         <?php foreach ($statItems as $i => $stat): ?>
-                        <div style="display:flex;align-items:baseline;gap:12px;<?= $i > 0 ? 'border-top:1px solid rgba(255,255,255,0.08);' : '' ?>padding:16px 0">
-                            <span style="font-size:clamp(36px,5vw,56px);font-weight:800;color:<?= $stat['color'] ?>;line-height:1;letter-spacing:-0.02em;min-width:80px">
+                        <div style="display:flex;align-items:baseline;gap:12px;<?= $i > 0 ? 'border-top:1px solid rgba(255,255,255,0.06);' : '' ?>padding:14px 0">
+                            <span style="font-size:clamp(32px,4vw,48px);font-weight:800;color:<?= $stat['color'] ?>;line-height:1;letter-spacing:-0.02em;min-width:72px">
                                 <?= $stat['value'] ?>
                             </span>
-                            <span style="color:rgba(255,255,255,0.35);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;font-weight:500">
-                                <?= $stat['label'] ?>
-                            </span>
+                            <div>
+                                <span style="color:rgba(255,255,255,0.5);font-size:13px;font-weight:600;display:block;line-height:1.2">
+                                    <?= $stat['label'] ?>
+                                </span>
+                                <span style="color:rgba(255,255,255,0.25);font-size:10px;letter-spacing:0.05em;text-transform:uppercase">
+                                    <?= $stat['sub'] ?>
+                                </span>
+                            </div>
                         </div>
                         <?php endforeach; ?>
                     </div>
@@ -168,37 +181,41 @@
                 <div class="flex flex-wrap gap-1.5">
                     <button @click="activeCategory = ''"
                             :style="activeCategory === '' ? 'background:#065f46;color:#f0fdf4' : 'background:#f0f0ec;color:#6b7280'"
-                            style="padding:8px 14px;font-size:12px;font-weight:600;border:none;cursor:pointer;transition:all 0.15s">
+                            style="padding:7px 16px;font-size:12px;font-weight:600;border:none;cursor:pointer;transition:all 0.15s;border-radius:999px">
                         Semua
                     </button>
                     <?php foreach ($categories as $cat): ?>
                     <button @click="activeCategory = '<?= \App\Helpers\H::e($cat['slug']) ?>'"
                             :style="activeCategory === '<?= \App\Helpers\H::e($cat['slug']) ?>' ? 'background:#065f46;color:#f0fdf4' : 'background:#f0f0ec;color:#6b7280'"
-                            style="padding:8px 14px;font-size:12px;font-weight:600;border:none;cursor:pointer;transition:all 0.15s">
+                            style="padding:7px 16px;font-size:12px;font-weight:600;border:none;cursor:pointer;transition:all 0.15s;border-radius:999px">
                         <?= \App\Helpers\H::e($cat['name']) ?>
                     </button>
                     <?php endforeach; ?>
                 </div>
             </div>
 
-            <!-- Apps list -->
-            <div>
+            <!-- Apps grid: 2 cols on sm, 3 on lg -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <template x-for="app in filteredApps" :key="app.id">
-                    <a :href="'/app/' + app.slug" style="display:flex;align-items:center;gap:16px;padding:16px 0;border-bottom:1px solid #e8e8e4;text-decoration:none;transition:background 0.15s" onmouseover="this.style.background='#f5f5f0'" onmouseout="this.style.background='transparent'">
-                        <div style="width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"
-                             :style="'background:' + app.icon_color + '15;color:' + (app.icon_color === 'emerald' ? '#059669' : app.icon_color === 'sky' ? '#0284c7' : app.icon_color === 'violet' ? '#7c3aed' : app.icon_color === 'amber' ? '#d97706' : app.icon_color === 'rose' ? '#e11d48' : '#4b5563')">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6z"/>
-                            </svg>
+                    <a :href="'/app/' + app.slug" style="display:flex;flex-direction:column;padding:20px;background:#fff;border:1px solid #eee;border-radius:12px;text-decoration:none;transition:all 0.2s;position:relative" onmouseover="this.style.borderColor='#065f46';this.style.boxShadow='0 4px 12px rgba(6,95,70,0.08)'" onmouseout="this.style.borderColor='#eee';this.style.boxShadow='none'">
+                        <!-- Icon + arrow -->
+                        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px">
+                            <div style="width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center"
+                                 :style="'background:' + app.icon_color + '12;color:' + (app.icon_color === 'emerald' ? '#059669' : app.icon_color === 'sky' ? '#0284c7' : app.icon_color === 'violet' ? '#7c3aed' : app.icon_color === 'amber' ? '#d97706' : app.icon_color === 'rose' ? '#e11d48' : '#4b5563')">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6z"/>
+                                </svg>
+                            </div>
+                            <svg width="14" height="14" fill="none" stroke="#ccc" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7v10"/></svg>
                         </div>
-                        <div class="flex-1 min-w-0">
-                            <p style="font-size:14px;font-weight:600;color:#1a1a1a" x-text="app.name"></p>
-                            <p style="font-size:12px;color:#9ca3af;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" x-text="app.short_description || app.description || ''"></p>
+                        <!-- Name -->
+                        <p style="font-size:14px;font-weight:700;color:#1a1a1a;margin-bottom:6px;line-height:1.3" x-text="app.name"></p>
+                        <!-- Desc -->
+                        <p style="font-size:12px;color:#999;line-height:1.5;flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden" x-text="app.short_description || app.description || ''"></p>
+                        <!-- Category pill -->
+                        <div style="margin-top:14px;padding-top:12px;border-top:1px solid #f3f3ef">
+                            <span style="font-size:10px;font-weight:600;color:#065f46;background:#f0fdf4;padding:3px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:0.05em" x-text="app.category_name"></span>
                         </div>
-                        <div class="hidden sm:flex items-center gap-2 flex-shrink-0">
-                            <span style="font-size:10px;font-weight:600;color:#9ca3af;background:#f0f0ec;padding:2px 8px;text-transform:uppercase;letter-spacing:0.05em" x-text="app.category_name"></span>
-                        </div>
-                        <svg width="16" height="16" fill="none" stroke="#ccc" viewBox="0 0 24 24" class="flex-shrink-0"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </a>
                 </template>
             </div>
