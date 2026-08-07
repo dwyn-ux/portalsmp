@@ -56,6 +56,33 @@
 .text-teal-500 { color: #14b8a6; }
 .text-teal-600 { color: #0d9488; }
 
+/* Slate (dark) */
+.bg-slate-900 { background-color: #0f172a; }
+.bg-slate-950 { background-color: #020617; }
+.from-slate-900 { --tw-gradient-from: #0f172a; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(15,23,42,0)); }
+.from-slate-950 { --tw-gradient-from: #020617; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(2,6,23,0)); }
+
+/* Gradient stops for emerald (missing from pre-built) */
+.from-emerald-600 { --tw-gradient-from: #059669; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(5,150,105,0)); }
+.from-emerald-700 { --tw-gradient-from: #047857; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(4,120,87,0)); }
+.from-emerald-800 { --tw-gradient-from: #065f46; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(6,95,70,0)); }
+.from-emerald-900 { --tw-gradient-from: #064e3b; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(6,78,59,0)); }
+.from-emerald-950 { --tw-gradient-from: #022c22; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(2,44,34,0)); }
+.via-emerald-800 { --tw-gradient-stops: var(--tw-gradient-from), #065f46, var(--tw-gradient-to, rgba(6,95,70,0)); }
+.via-emerald-900 { --tw-gradient-stops: var(--tw-gradient-from), #064e3b, var(--tw-gradient-to, rgba(6,78,59,0)); }
+.via-emerald-950 { --tw-gradient-stops: var(--tw-gradient-from), #022c22, var(--tw-gradient-to, rgba(2,44,34,0)); }
+.to-emerald-900 { --tw-gradient-to: #064e3b; }
+.to-emerald-950 { --tw-gradient-to: #022c22; }
+.to-teal-800 { --tw-gradient-to: #115e59; }
+.to-teal-900 { --tw-gradient-to: #134e4a; }
+
+/* Sky gradient stops */
+.from-sky-300 { --tw-gradient-from: #7dd3fc; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(125,211,252,0)); }
+
+/* Gradient text support */
+.bg-clip-text { -webkit-background-clip: text; background-clip: text; }
+.text-transparent { color: transparent; }
+
 /* Indigo */
 .bg-indigo-50 { background-color: #eef2ff; }
 .bg-indigo-100 { background-color: #e0e7ff; }

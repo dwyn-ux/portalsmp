@@ -55,17 +55,17 @@
 <!-- ═══ Hero ═══ -->
 <section class="relative pt-24 overflow-hidden">
     <!-- Background layers -->
-    <div class="absolute inset-0 bg-gradient-to-br from-[#0f172a] via-[#1e3a5f] to-[#065f46]"></div>
-    <!-- Mesh gradient blobs -->
-    <div class="absolute top-[-20%] left-[-10%] w-[700px] h-[700px] bg-emerald-500/20 rounded-full blur-[120px]"></div>
-    <div class="absolute bottom-[-30%] right-[-10%] w-[600px] h-[600px] bg-sky-500/15 rounded-full blur-[100px]"></div>
-    <div class="absolute top-[20%] right-[10%] w-[300px] h-[300px] bg-amber-400/10 rounded-full blur-[80px]"></div>
-    <div class="absolute bottom-[10%] left-[15%] w-[250px] h-[250px] bg-violet-500/10 rounded-full blur-[80px]"></div>
+    <div class="absolute inset-0 bg-gradient-to-br from-emerald-800 via-emerald-900 to-emerald-950"></div>
+    <!-- Decorative orbs — pakai class yang ada -->
+    <div class="absolute rounded-full bg-emerald-400/20 blur-3xl" style="width:500px;height:500px;top:-15%;right:-10%"></div>
+    <div class="absolute rounded-full bg-sky-400/15 blur-3xl" style="width:400px;height:400px;bottom:-20%;left:-5%"></div>
+    <div class="absolute rounded-full bg-amber-400/10 blur-2xl" style="width:250px;height:250px;top:25%;right:15%"></div>
+    <div class="absolute rounded-full bg-violet-400/10 blur-2xl" style="width:200px;height:200px;bottom:20%;left:10%"></div>
     <!-- Texture overlays -->
     <div class="absolute inset-0 texture-stars"></div>
     <div class="absolute inset-0 texture-dots"></div>
-    <!-- Islamic geometric decorative lines -->
-    <svg class="absolute top-0 left-0 w-full h-full opacity-[0.04]" xmlns="http://www.w3.org/2000/svg">
+    <!-- Islamic geometric pattern -->
+    <svg class="absolute inset-0 w-full h-full opacity-5" xmlns="http://www.w3.org/2000/svg">
         <defs>
             <pattern id="hero-geo" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
                 <path d="M60 0 L120 60 L60 120 L0 60Z" fill="none" stroke="white" stroke-width="0.5"/>
@@ -76,15 +76,15 @@
         <rect width="100%" height="100%" fill="url(#hero-geo)"/>
     </svg>
     <!-- Floating decorative shapes -->
-    <div class="absolute top-[15%] left-[5%] w-16 h-16 border border-white/10 rounded-2xl rotate-12 hidden lg:block" style="animation: float 6s ease-in-out infinite"></div>
-    <div class="absolute top-[25%] right-[8%] w-10 h-10 border border-white/10 rounded-full hidden lg:block" style="animation: float 8s ease-in-out infinite 1s"></div>
-    <div class="absolute bottom-[25%] left-[12%] w-8 h-8 border border-amber-400/20 rounded-lg rotate-45 hidden lg:block" style="animation: float 7s ease-in-out infinite 0.5s"></div>
-    <div class="absolute bottom-[30%] right-[15%] w-12 h-12 border border-emerald-400/15 rounded-xl -rotate-12 hidden lg:block" style="animation: float 5s ease-in-out infinite 2s"></div>
+    <div class="absolute w-16 h-16 border border-white/10 rounded-2xl rotate-12 hidden lg:block" style="top:15%;left:5%;animation:float 6s ease-in-out infinite"></div>
+    <div class="absolute w-10 h-10 border border-white/10 rounded-full hidden lg:block" style="top:25%;right:8%;animation:float 8s ease-in-out infinite 1s"></div>
+    <div class="absolute w-8 h-8 border border-amber-400/20 rounded-lg rotate-45 hidden lg:block" style="bottom:25%;left:12%;animation:float 7s ease-in-out infinite 0.5s"></div>
+    <div class="absolute w-12 h-12 border border-emerald-400/15 rounded-xl -rotate-12 hidden lg:block" style="bottom:30%;right:15%;animation:float 5s ease-in-out infinite 2s"></div>
 
     <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-28">
         <div class="max-w-3xl mx-auto text-center">
             <!-- Badge -->
-            <div class="inline-flex items-center gap-2 bg-white/[0.08] backdrop-blur-sm border border-white/[0.12] text-white/70 text-xs font-medium tracking-wider uppercase px-5 py-2 rounded-full mb-8">
+            <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/15 text-white/70 text-xs font-medium tracking-wider uppercase px-5 py-2 rounded-full mb-8">
                 <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
                 SMP Muhammadiyah Unggulan Ashidiq
                 <span class="w-1 h-1 bg-white/20 rounded-full"></span>
@@ -92,7 +92,7 @@
             </div>
 
             <!-- Headline -->
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-[1.05] tracking-tight">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight tracking-tight">
                 Portal<br>
                 <span class="bg-gradient-to-r from-emerald-300 via-teal-200 to-sky-300 bg-clip-text text-transparent">Digital</span>
                 Sekolah
@@ -105,7 +105,7 @@
 
             <!-- CTA Buttons -->
             <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
-                <a href="#apps" class="group inline-flex items-center gap-2.5 bg-white text-[#0f172a] font-semibold text-sm px-8 py-3.5 rounded-xl hover:bg-emerald-50 transition-all duration-200 shadow-lg shadow-black/20">
+                <a href="#apps" class="group inline-flex items-center gap-2.5 bg-white text-emerald-800 font-semibold text-sm px-8 py-3.5 rounded-xl hover:bg-emerald-50 transition-all duration-200 shadow-lg shadow-black/20">
                     <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
                     </svg>
@@ -114,7 +114,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                     </svg>
                 </a>
-                <a href="#info" class="inline-flex items-center gap-2 bg-white/[0.06] backdrop-blur-sm border border-white/[0.1] text-white/70 font-medium text-sm px-8 py-3.5 rounded-xl hover:bg-white/[0.1] hover:text-white transition-all duration-200">
+                <a href="#info" class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/15 text-white/70 font-medium text-sm px-8 py-3.5 rounded-xl hover:bg-white/20 hover:text-white transition-all duration-200">
                     Selengkapnya
                 </a>
             </div>
@@ -131,7 +131,7 @@
             ];
             ?>
             <?php foreach ($statItems as $stat): ?>
-            <div class="group bg-white/[0.06] backdrop-blur-sm border border-white/[0.08] rounded-2xl p-4 hover:bg-white/[0.1] hover:border-white/[0.15] transition-all duration-300">
+            <div class="group bg-white/10 backdrop-blur-sm border border-white/10 rounded-2xl p-4 hover:bg-white/15 hover:border-white/20 transition-all duration-300">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-<?= $stat['accent'] ?>-500/15 border border-<?= $stat['accent'] ?>-400/20">
                         <svg class="w-5 h-5 text-<?= $stat['accent'] ?>-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
