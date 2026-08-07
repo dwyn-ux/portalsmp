@@ -114,32 +114,18 @@
                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100">
     </div>
 
-    <!-- Logo Mitra -->
+    <!-- Logo Sekolah -->
     <div class="bg-white rounded-2xl border border-gray-200/60 p-6">
-        <h2 class="font-bold text-gray-900 mb-1">Logo Mitra / Partner</h2>
-        <p class="text-xs text-gray-400 mb-4">Logo yang ditampilkan di bawah header halaman utama.</p>
-        <?php
-        $heroLogos = [];
-        if (!empty($settingsData['hero_logos'])) {
-            $heroLogos = json_decode($settingsData['hero_logos'], true) ?? [];
-        }
-        ?>
-        <?php if (!empty($heroLogos)): ?>
-        <div class="flex flex-wrap gap-3 mb-4" id="logoPreview">
-            <?php foreach ($heroLogos as $idx => $logo): ?>
-            <div class="relative group">
-                <img src="<?= \App\Helpers\H::e($logo) ?>" alt="Logo" class="w-16 h-16 object-contain bg-gray-50 rounded-lg border border-gray-200 p-1">
-                <label class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center cursor-pointer text-[10px] opacity-0 group-hover:opacity-100 transition-opacity" title="Hapus">
-                    <input type="checkbox" name="hero_logos_delete[]" value="<?= \App\Helpers\H::e($logo) ?>" class="hidden">
-                    &times;
-                </label>
-            </div>
-            <?php endforeach; ?>
+        <h2 class="font-bold text-gray-900 mb-1">Logo Sekolah</h2>
+        <p class="text-xs text-gray-400 mb-4">Logo ditampilkan di header dan sebagai favicon.</p>
+        <?php if (!empty($settingsData['hero_logos'])): ?>
+        <div class="mb-3 flex items-center gap-3">
+            <img src="<?= \App\Helpers\H::e($settingsData['hero_logos']) ?>" alt="Logo" class="w-16 h-16 object-contain bg-gray-50 rounded-lg border border-gray-200 p-1">
+            <a href="/admin/settings?delete_logo=1" onclick="return confirm('Hapus logo?')" class="text-xs text-red-500 hover:text-red-700 font-medium">Hapus logo</a>
         </div>
         <?php endif; ?>
-        <input type="file" name="hero_logos[]" accept="image/*" multiple
+        <input type="file" name="hero_logos" accept="image/*"
                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100">
-        <p class="text-[10px] text-gray-400 mt-1">Bisa pilih beberapa file sekaligus (Ctrl+Klik)</p>
     </div>
 
     <button type="submit" class="bg-emerald-600 text-white text-sm font-medium px-6 py-2.5 rounded-xl hover:bg-emerald-700 transition shadow-lg shadow-emerald-500/25">

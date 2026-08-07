@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Portal Digital SMP Muhammadiyah Unggulan Ashidiq">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23059669'/><text y='.9em' x='50' text-anchor='middle' font-size='65' fill='white'>P</text></svg>">
+    <link rel="icon" href="<?= !empty($settings['hero_logos']) ? \App\Helpers\H::e($settings['hero_logos']) : "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23059669'/><text y='.9em' x='50' text-anchor='middle' font-size='65' fill='white'>P</text></svg>" ?>">
     <title><?= \App\Helpers\H::e($title ?? 'Portal Digital') ?></title>
     <link rel="stylesheet" href="/assets/css/tailwind.min.css">
     <link rel="stylesheet" href="/assets/css/app.css">

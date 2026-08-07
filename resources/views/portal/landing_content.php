@@ -4,9 +4,7 @@
  * Two-column: welcome card left + app grid right.
  */
 $heroBg = isset($settings['hero_bg']) ? $settings['hero_bg'] : '';
-$heroLogosRaw = isset($settings['hero_logos']) ? $settings['hero_logos'] : '[]';
-$heroLogos = json_decode($heroLogosRaw, true);
-if (!is_array($heroLogos)) { $heroLogos = []; }
+$heroLogo = isset($settings['hero_logos']) ? $settings['hero_logos'] : '';
 $catColors = [
     'emerald' => ['#0f766e','rgba(15,118,110,.10)'],
     'teal'    => ['#0d9488','rgba(13,148,136,.12)'],
@@ -70,8 +68,8 @@ $catColors = [
         <!-- Header -->
         <header class="portal-header">
             <div class="portal-brand">
-                <?php if (!empty($heroLogos)): ?>
-                    <img class="portal-logo" src="<?= \App\Helpers\H::e($heroLogos[0]) ?>" alt="Logo">
+                <?php if (!empty($heroLogo)): ?>
+                    <img class="portal-logo" src="<?= \App\Helpers\H::e($heroLogo) ?>" alt="Logo">
                 <?php else: ?>
                     <div class="portal-logo" style="display:flex;align-items:center;justify-content:center;color:#0f766e;font-size:26px;font-weight:900">P</div>
                 <?php endif; ?>

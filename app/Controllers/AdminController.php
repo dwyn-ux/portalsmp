@@ -439,37 +439,34 @@ class AdminController
         }
         unset($settings['hero_bg_delete']);
 
-        // Handle hero_logos upload
-        $currentLogos = json_decode($this->settingModel->getAll()['hero_logos'] ?? '[]', true) ?? [];
+        // Handle hero_logos — single logo file
+        $currentLogo = isset($this->settingModel->getAll()['hero_logos']) ? $this->settingModel->getAll()['hero_logos'] : '';
 
-        // Remove deleted logos
-        if (!empty($data['hero_logos_delete'])) {
-            $deleteUrls = is_array($data['hero_logos_delete']) ? $data['hero_logos_delete'] : [$data['hero_logos_delete']];
-            foreach ($deleteUrls as $delUrl) {
-                Upload::delete($delUrl);
-                $currentLogos = array_values(array_filter($currentLogos, fn($l) => $l !== $delUrl));
-            }
+        // Delete logo via query param
+        if (isset($_GET['delete_logo']) && $currentLogo) {
+            Upload::delete($currentLogo);
+            $settings['hero_logos'] = '';
+            $this->settingModel->updateMany(['hero_logos' => '']);
+            $_SESSION['flash_success'] = 'Logo berhasil dihapus.';
+            Url::redirect('/admin/settings');
         }
 
-        // Add new logos
-        if (!empty($_FILES['hero_logos']['name'][0])) {
-            $files = $_FILES['hero_logos'];
-            for ($i = 0; $i < count($files['name']); $i++) {
-                $singleFile = [
-                    'name' => $files['name'][$i],
-                    'type' => $files['type'][$i],
-                    'tmp_name' => $files['tmp_name'][$i],
-                    'error' => $files['error'][$i],
-                    'size' => $files['size'][$i],
-                ];
-                $logoPath = Upload::handle($singleFile, 'hero');
-                if ($logoPath) {
-                    $currentLogos[] = $logoPath;
+        if (!empty($_FILES['hero_logos']['name'])) {
+            $logoFile = [
+                'name' => $_FILES['hero_logos']['name'],
+                'type' => $_FILES['hero_logos']['type'],
+                'tmp_name' => $_FILES['hero_logos']['tmp_name'],
+                'error' => $_FILES['hero_logos']['error'],
+                'size' => $_FILES['hero_logos']['size'],
+            ];
+            $logoPath = Upload::handle($logoFile, 'hero');
+            if ($logoPath) {
+                if ($currentLogo) {
+                    Upload::delete($currentLogo);
                 }
+                $settings['hero_logos'] = $logoPath;
             }
         }
-
-        $settings['hero_logos'] = json_encode($currentLogos);
 
         $this->settingModel->updateMany($settings);
 
