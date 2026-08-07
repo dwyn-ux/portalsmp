@@ -172,6 +172,9 @@ table{font-size:10px}table th{background:#e2e8f0!important}
 
 <aside class="sidebar">
 <div class="logo">
+<div id="sbLogo" style="width:48px;height:48px;background:rgba(255,255,255,.1);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;overflow:hidden">
+<span style="font-size:20px;font-weight:900;color:var(--ac)">S</span>
+</div>
 <h2>SUPERVISI AKADEMIK</h2>
 <small>Pengawasan Pembelajaran Guru</small>
 </div>
@@ -280,6 +283,13 @@ Pengaturan
 
 <div class="page" id="p-sett">
 <div class="card" style="max-width:520px">
+<h3>Logo Supervisi</h3>
+<div id="logoPreview" style="margin-bottom:12px"></div>
+<input type="file" id="sLogo" accept="image/*" style="margin-bottom:12px">
+<br>
+<button class="btn btn-primary" onclick="simpanLogo()">💾 Simpan Logo</button>
+</div>
+<div class="card" style="max-width:520px;margin-top:16px">
 <h3>Pengaturan Kepala Sekolah</h3>
 <div class="form-group"><label>Nama Kepala Sekolah</label><input id="sNama" placeholder="Nama lengkap"></div>
 <div class="form-group"><label>NIP</label><input id="sNip" placeholder="NIP"></div>
@@ -557,6 +567,9 @@ api('/settings')
 ]);
 guruList = gRes.data || [];
 settings = sRes.data || {};
+if (settings.logo) {
+document.getElementById('sbLogo').innerHTML = '<img src="' + settings.logo + '" alt="Logo" style="width:100%;height:100%;object-fit:contain;border-radius:8px">';
+}
 rdash();
 }
 
@@ -910,7 +923,28 @@ document.getElementById('sNama').value = settings.kepsek_nama || '';
 document.getElementById('sNip').value = settings.kepsek_nip || '';
 document.getElementById('sUnit').value = settings.kepsek_unit || '';
 document.getElementById('sKota').value = settings.kepsek_kota || '';
+if (settings.logo) {
+document.getElementById('logoPreview').innerHTML = '<img src="' + settings.logo + '" alt="Logo" style="width:80px;height:80px;object-fit:contain;border-radius:8px;border:1px solid var(--br)">';
+}
 } catch (e) {}
+}
+
+async function simpanLogo() {
+const file = document.getElementById('sLogo').files[0];
+if (!file) { toast('Pilih file logo terlebih dahulu!', 'wn'); return; }
+const fd = new FormData();
+fd.append('logo', file);
+try {
+const r = await api('/settings/upload-logo', { method: 'POST', body: fd });
+if (r.ok) {
+toast('Logo berhasil diunggah!');
+if (r.url) {
+settings.logo = r.url;
+document.getElementById('sbLogo').innerHTML = '<img src="' + r.url + '" alt="Logo" style="width:100%;height:100%;object-fit:contain;border-radius:8px">';
+document.getElementById('logoPreview').innerHTML = '<img src="' + r.url + '" alt="Logo" style="width:80px;height:80px;object-fit:contain;border-radius:8px;border:1px solid var(--br)">';
+}
+} else { toast(r.error || 'Gagal mengunggah logo', 'er'); }
+} catch (e) { toast('Gagal mengunggah logo', 'er'); }
 }
 
 async function simpanSett() {

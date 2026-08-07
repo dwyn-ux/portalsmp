@@ -194,4 +194,27 @@ class SupervisiController
         if (!$this->requireRole()) { $this->deny(); }
         $this->json(['data' => $this->model->getRekap()]);
     }
+
+    public function apiUploadLogo(): void
+    {
+        if (!$this->requireRole()) { $this->deny(); }
+
+        if (empty($_FILES['logo']['name'])) {
+            $this->json(['error' => 'Pilih file logo'], 422);
+        }
+
+        $logoPath = \App\Helpers\Upload::handle($_FILES['logo'], 'supervisi');
+        if (!$logoPath) {
+            $this->json(['error' => 'Gagal mengunggah file'], 500);
+        }
+
+        // Hapus logo lama
+        $old = $this->model->getSettings()['logo'] ?? '';
+        if ($old) {
+            \App\Helpers\Upload::delete($old);
+        }
+
+        $this->model->saveSettings(['logo' => $logoPath]);
+        $this->json(['ok' => true, 'url' => $logoPath]);
+    }
 }

@@ -69,5 +69,6 @@ $router->get('/supervisi/api/settings', [SupervisiController::class, 'apiSetting
 $router->post('/supervisi/api/settings', [SupervisiController::class, 'apiSettings']);
 $router->get('/supervisi/api/stats', [SupervisiController::class, 'apiStats']);
 $router->get('/supervisi/api/rekap', [SupervisiController::class, 'apiRekap']);
+$router->post('/supervisi/api/settings/upload-logo', [SupervisiController::class, 'apiUploadLogo']);
 
 return $router;
