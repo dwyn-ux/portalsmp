@@ -7,7 +7,7 @@
 // Background from admin upload, fallback to dark gradient
 $heroBg = $settings['hero_bg'] ?? '';
 $heroBgStyle = !empty($heroBg)
-    ? "background: linear-gradient(170deg, rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('".\App\Helpers\H::e($heroBg)."') no-repeat center center fixed; background-size:cover;"
+    ? "background: linear-gradient(170deg, rgba(0,0,0,0.92), rgba(0,0,0,0.92)), url('".\App\Helpers\H::e($heroBg)."') no-repeat center center fixed; background-size:cover;"
     : '';
 ?>
 <style>
