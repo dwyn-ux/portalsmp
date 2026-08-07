@@ -4,8 +4,9 @@ RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} -f
 RewriteRule ^ - [L]
 
-# Serve files from public/ directory
-RewriteCond %{DOCUMENT_ROOT}/public%{REQUEST_URI} -f
+# Serve files and directories from public/ directory
+RewriteCond %{DOCUMENT_ROOT}/public%{REQUEST_URI} -f [OR]
+RewriteCond %{DOCUMENT_ROOT}/public%{REQUEST_URI} -d
 RewriteRule ^ public%{REQUEST_URI} [L]
 
 # Route everything else to index.php
