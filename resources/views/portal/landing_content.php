@@ -3,8 +3,10 @@
  * Landing page — inspired by SIT Nassadepok portal.
  * Two-column: welcome card left + app grid right.
  */
-$heroBg = $settings['hero_bg'] ?? '';
-$heroLogos = !empty($settings['hero_logos']) ? json_decode($settings['hero_logos'], true) ?? [] : [];
+$heroBg = isset($settings['hero_bg']) ? $settings['hero_bg'] : '';
+$heroLogosRaw = isset($settings['hero_logos']) ? $settings['hero_logos'] : '[]';
+$heroLogos = json_decode($heroLogosRaw, true);
+if (!is_array($heroLogos)) { $heroLogos = []; }
 $catColors = [
     'emerald' => ['#0f766e','rgba(15,118,110,.10)'],
     'teal'    => ['#0d9488','rgba(13,148,136,.12)'],
@@ -74,7 +76,7 @@ $catColors = [
                     <div class="portal-logo" style="display:flex;align-items:center;justify-content:center;color:#0f766e;font-size:26px;font-weight:900">P</div>
                 <?php endif; ?>
                 <div>
-                    <h2 class="portal-brand-title"><?= \App\Helpers\H::e($settings['school_name'] ?? 'Portal Digital') ?></h2>
+                    <h2 class="portal-brand-title"><?= \App\Helpers\H::e(isset($settings['school_name']) ? $settings['school_name'] : 'Portal Digital') ?></h2>
                     <p class="portal-brand-subtitle">Satu pintu layanan digital sekolah</p>
                 </div>
             </div>
@@ -86,7 +88,7 @@ $catColors = [
             <aside class="portal-welcome">
                 <div class="portal-welcome-inner">
                     <div class="portal-badge">Portal Sekolah Digital</div>
-                    <h1>Selamat Datang di <?= \App\Helpers\H::e($settings['school_name'] ?? 'Portal Digital') ?></h1>
+                    <h1>Selamat Datang di <?= \App\Helpers\H::e(isset($settings['school_name']) ? $settings['school_name'] : 'Portal Digital') ?></h1>
                     <p>Akses layanan sekolah lebih mudah dalam satu halaman. Pilih portal sesuai kebutuhan untuk masuk ke layanan digital sekolah.</p>
                     <?php if (!empty($announcements)): ?>
                     <div style="margin-top:20px;padding:12px 16px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);border-radius:14px">
@@ -108,7 +110,8 @@ $catColors = [
                 <div class="portal-grid">
                     <?php if (!empty($apps)): ?>
                     <?php foreach ($apps as $app):
-                        $cc = $catColors[$app['category_color'] ?? 'emerald'] ?? ['#0f766e','rgba(15,118,110,.10)'];
+                        $catColorKey = isset($app['category_color']) ? $app['category_color'] : 'emerald';
+                        $cc = isset($catColors[$catColorKey]) ? $catColors[$catColorKey] : ['#0f766e','rgba(15,118,110,.10)'];
                         $accent = $cc[0]; $accentSoft = $cc[1];
                         $initial = strtoupper(substr($app['name'], 0, 1));
                         $hasLogo = !empty($app['logo']);
@@ -122,7 +125,7 @@ $catColors = [
                         </div>
                         <div class="portal-card-content">
                             <h3><?= \App\Helpers\H::e($app['name']) ?></h3>
-                            <p><?= \App\Helpers\H::e($app['short_description'] ?? $app['description'] ?? '') ?></p>
+                            <p><?= \App\Helpers\H::e(!empty($app['short_description']) ? $app['short_description'] : (!empty($app['description']) ? $app['description'] : '')) ?></p>
                             <div class="portal-card-action" style="color:<?= $accent ?>">Masuk <span>›</span></div>
                         </div>
                     </a>
@@ -136,7 +139,7 @@ $catColors = [
 
         <!-- Footer -->
         <footer class="portal-footer">
-            <div><?= \App\Helpers\H::e($settings['footer_text'] ?? '© 2025 SMP Muhammadiyah Unggulan Ashidiq.') ?></div>
+            <div><?= \App\Helpers\H::e(!empty($settings['footer_text']) ? $settings['footer_text'] : '© 2025 SMP Muhammadiyah Unggulan Ashidiq.') ?></div>
             <?php if (!empty($settings['school_email'])): ?>
             <a href="mailto:<?= \App\Helpers\H::e($settings['school_email']) ?>"><?= \App\Helpers\H::e($settings['school_email']) ?></a>
             <?php endif; ?>
