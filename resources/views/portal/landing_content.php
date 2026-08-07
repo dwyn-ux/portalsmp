@@ -114,6 +114,7 @@
 
         <!-- App Tiles Grid -->
         <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:14px">
+            <?php if (!empty($apps)): ?>
             <?php foreach ($apps as $app): ?>
             <a href="/app/<?= \App\Helpers\H::e($app['slug']) ?>" class="app-tile">
                 <div class="tile-icon" style="background:<?= \App\Helpers\H::e($app['icon_color'] ?? 'emerald') ?>18">
@@ -125,6 +126,9 @@
                 <span class="tile-sub"><?= \App\Helpers\H::e($app['category_name'] ?? '') ?></span>
             </a>
             <?php endforeach; ?>
+            <?php else: ?>
+            <p style="color:rgba(255,255,255,0.6);font-size:13px;text-align:center;padding:40px 0">Belum ada aplikasi</p>
+            <?php endif; ?>
         </div>
     </div>
 </div>
