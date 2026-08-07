@@ -210,6 +210,8 @@ Pengaturan
 </a>
 </nav>
 <div class="sfoot">
+<a href="/supervisi/logout" style="color:rgba(255,255,255,.5);text-decoration:none;font-size:11px">🚪 Logout</a>
+<br>
 <a href="/" style="color:rgba(255,255,255,.5);text-decoration:none;font-size:11px">&larr; Kembali ke Portal</a>
 </div>
 </aside>
