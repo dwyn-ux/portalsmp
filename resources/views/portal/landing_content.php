@@ -55,54 +55,92 @@
 <!-- ═══ Hero ═══ -->
 <section class="relative pt-24 overflow-hidden">
     <!-- Background layers -->
-    <div class="absolute inset-0 bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-800"></div>
+    <div class="absolute inset-0 bg-gradient-to-br from-[#0f172a] via-[#1e3a5f] to-[#065f46]"></div>
+    <!-- Mesh gradient blobs -->
+    <div class="absolute top-[-20%] left-[-10%] w-[700px] h-[700px] bg-emerald-500/20 rounded-full blur-[120px]"></div>
+    <div class="absolute bottom-[-30%] right-[-10%] w-[600px] h-[600px] bg-sky-500/15 rounded-full blur-[100px]"></div>
+    <div class="absolute top-[20%] right-[10%] w-[300px] h-[300px] bg-amber-400/10 rounded-full blur-[80px]"></div>
+    <div class="absolute bottom-[10%] left-[15%] w-[250px] h-[250px] bg-violet-500/10 rounded-full blur-[80px]"></div>
+    <!-- Texture overlays -->
     <div class="absolute inset-0 texture-stars"></div>
     <div class="absolute inset-0 texture-dots"></div>
-    <!-- Decorative orbs -->
-    <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-white/[0.03] rounded-full -translate-y-1/2 translate-x-1/3"></div>
-    <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-emerald-400/[0.04] rounded-full translate-y-1/2 -translate-x-1/4"></div>
+    <!-- Islamic geometric decorative lines -->
+    <svg class="absolute top-0 left-0 w-full h-full opacity-[0.04]" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <pattern id="hero-geo" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
+                <path d="M60 0 L120 60 L60 120 L0 60Z" fill="none" stroke="white" stroke-width="0.5"/>
+                <circle cx="60" cy="60" r="30" fill="none" stroke="white" stroke-width="0.3"/>
+                <path d="M60 30 L90 60 L60 90 L30 60Z" fill="none" stroke="white" stroke-width="0.3"/>
+            </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#hero-geo)"/>
+    </svg>
+    <!-- Floating decorative shapes -->
+    <div class="absolute top-[15%] left-[5%] w-16 h-16 border border-white/10 rounded-2xl rotate-12 hidden lg:block" style="animation: float 6s ease-in-out infinite"></div>
+    <div class="absolute top-[25%] right-[8%] w-10 h-10 border border-white/10 rounded-full hidden lg:block" style="animation: float 8s ease-in-out infinite 1s"></div>
+    <div class="absolute bottom-[25%] left-[12%] w-8 h-8 border border-amber-400/20 rounded-lg rotate-45 hidden lg:block" style="animation: float 7s ease-in-out infinite 0.5s"></div>
+    <div class="absolute bottom-[30%] right-[15%] w-12 h-12 border border-emerald-400/15 rounded-xl -rotate-12 hidden lg:block" style="animation: float 5s ease-in-out infinite 2s"></div>
 
-    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
-        <div class="max-w-2xl mx-auto text-center">
-            <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/15 text-white/80 text-xs font-medium tracking-wide uppercase px-4 py-1.5 rounded-full mb-6">
-                <span class="w-1.5 h-1.5 bg-emerald-300 rounded-full animate-pulse"></span>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-28">
+        <div class="max-w-3xl mx-auto text-center">
+            <!-- Badge -->
+            <div class="inline-flex items-center gap-2 bg-white/[0.08] backdrop-blur-sm border border-white/[0.12] text-white/70 text-xs font-medium tracking-wider uppercase px-5 py-2 rounded-full mb-8">
+                <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
                 SMP Muhammadiyah Unggulan Ashidiq
+                <span class="w-1 h-1 bg-white/20 rounded-full"></span>
+                <span class="text-amber-400/80">Berjiwa Qur'ani</span>
             </div>
-            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-4 leading-[1.1] tracking-tight">
-                Portal Digital<br>Sekolah
+
+            <!-- Headline -->
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-[1.05] tracking-tight">
+                Portal<br>
+                <span class="bg-gradient-to-r from-emerald-300 via-teal-200 to-sky-300 bg-clip-text text-transparent">Digital</span>
+                Sekolah
             </h1>
-            <p class="text-base sm:text-lg text-emerald-100/70 mb-8 max-w-md mx-auto leading-relaxed">
+
+            <!-- Subtitle -->
+            <p class="text-base sm:text-lg text-white/50 mb-10 max-w-lg mx-auto leading-relaxed">
                 Akses seluruh aplikasi dan informasi sekolah dalam satu tempat terintegrasi.
             </p>
-            <a href="#apps" class="group inline-flex items-center gap-2 bg-white text-emerald-700 font-semibold text-sm px-7 py-3 rounded-xl hover:bg-emerald-50 transition-all duration-200 shadow-lg shadow-black/10">
-                Lihat Aplikasi
-                <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                </svg>
-            </a>
+
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+                <a href="#apps" class="group inline-flex items-center gap-2.5 bg-white text-[#0f172a] font-semibold text-sm px-8 py-3.5 rounded-xl hover:bg-emerald-50 transition-all duration-200 shadow-lg shadow-black/20">
+                    <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                    </svg>
+                    Lihat Aplikasi
+                    <svg class="w-4 h-4 text-gray-400 group-hover:text-emerald-600 group-hover:translate-x-0.5 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </a>
+                <a href="#info" class="inline-flex items-center gap-2 bg-white/[0.06] backdrop-blur-sm border border-white/[0.1] text-white/70 font-medium text-sm px-8 py-3.5 rounded-xl hover:bg-white/[0.1] hover:text-white transition-all duration-200">
+                    Selengkapnya
+                </a>
+            </div>
         </div>
 
-        <!-- Stats -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-12 max-w-3xl mx-auto">
+        <!-- Stats row -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-16 max-w-3xl mx-auto">
             <?php
             $statItems = [
-                ['label' => 'Aplikasi', 'value' => $stats['total_apps'] ?? 0, 'color' => 'emerald', 'icon' => 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z'],
-                ['label' => 'Guru', 'value' => $stats['total_guru'] ?? 0, 'color' => 'blue', 'icon' => 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M19 7a3 3 0 11-6 0 3 3 0 016 0z'],
-                ['label' => 'Siswa', 'value' => $stats['total_siswa'] ?? 0, 'color' => 'violet', 'icon' => 'M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222'],
-                ['label' => 'Sistem', 'value' => $stats['total_systems'] ?? 0, 'color' => 'amber', 'icon' => 'M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z'],
+                ['label' => 'Aplikasi', 'value' => $stats['total_apps'] ?? 0, 'accent' => 'emerald', 'icon' => 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z'],
+                ['label' => 'Guru', 'value' => $stats['total_guru'] ?? 0, 'accent' => 'sky', 'icon' => 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M19 7a3 3 0 11-6 0 3 3 0 016 0z'],
+                ['label' => 'Siswa', 'value' => $stats['total_siswa'] ?? 0, 'accent' => 'violet', 'icon' => 'M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222'],
+                ['label' => 'Sistem', 'value' => $stats['total_systems'] ?? 0, 'accent' => 'amber', 'icon' => 'M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z'],
             ];
             ?>
             <?php foreach ($statItems as $stat): ?>
-            <div class="group bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl p-3.5 hover:bg-white/15 hover:border-white/20 transition-all duration-300">
+            <div class="group bg-white/[0.06] backdrop-blur-sm border border-white/[0.08] rounded-2xl p-4 hover:bg-white/[0.1] hover:border-white/[0.15] transition-all duration-300">
                 <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 bg-white/10">
-                        <svg class="w-4 h-4 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-<?= $stat['accent'] ?>-500/15 border border-<?= $stat['accent'] ?>-400/20">
+                        <svg class="w-5 h-5 text-<?= $stat['accent'] ?>-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="<?= $stat['icon'] ?>"/>
                         </svg>
                     </div>
                     <div>
-                        <p class="text-xl font-extrabold text-white leading-none"><?= $stat['value'] ?></p>
-                        <p class="text-[10px] text-white/50 font-medium mt-0.5 uppercase tracking-wider"><?= $stat['label'] ?></p>
+                        <p class="text-2xl font-extrabold text-white leading-none"><?= $stat['value'] ?></p>
+                        <p class="text-[10px] text-white/40 font-semibold mt-1 uppercase tracking-widest"><?= $stat['label'] ?></p>
                     </div>
                 </div>
             </div>
@@ -112,9 +150,26 @@
 
     <!-- Bottom wave -->
     <div class="absolute bottom-0 left-0 right-0">
-        <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full"><path d="M0 60V30C240 50 480 10 720 30S1200 50 1440 30V60H0Z" fill="#f9fafb"/></svg>
+        <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full">
+            <path d="M0 80V50C180 70 360 30 540 50C720 70 900 30 1080 50C1260 70 1350 40 1440 50V80H0Z" fill="#f9fafb" fill-opacity="0.5"/>
+            <path d="M0 80V60C240 40 480 70 720 50C960 30 1200 60 1440 50V80H0Z" fill="#f9fafb"/>
+        </svg>
     </div>
 </section>
+
+<style>
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(var(--rotate, 0deg)); }
+    50% { transform: translateY(-12px) rotate(var(--rotate, 0deg)); }
+}
+.hero-geo-line {
+    stroke-dasharray: 4 8;
+    animation: dash 20s linear infinite;
+}
+@keyframes dash {
+    to { stroke-dashoffset: -200; }
+}
+</style>
 
 <!-- ═══ Announcement Popup Modal ═══ -->
 <?php if (!empty($announcements)): ?>
