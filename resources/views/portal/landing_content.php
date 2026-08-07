@@ -1,232 +1,145 @@
 <?php
 /**
- * Landing page — smpam-inspired, unique version.
- * Category-colored tiles + admin logo upload + clean dark bg.
+ * Landing page — inspired by SIT Nassadepok portal.
+ * Two-column: welcome card left + app grid right.
  */
-
-// Background from admin upload, fallback to dark gradient
 $heroBg = $settings['hero_bg'] ?? '';
-$heroBgStyle = !empty($heroBg)
-    ? "background: linear-gradient(170deg, rgba(0,0,0,0.25), rgba(0,0,0,0.25)), url('".\App\Helpers\H::e($heroBg)."') no-repeat center center fixed; background-size:cover;"
-    : '';
+$heroLogos = !empty($settings['hero_logos']) ? json_decode($settings['hero_logos'], true) ?? [] : [];
+$catColors = [
+    'emerald' => ['#0f766e','rgba(15,118,110,.10)'],
+    'teal'    => ['#0d9488','rgba(13,148,136,.12)'],
+    'sky'     => ['#0284c7','rgba(2,132,199,.12)'],
+    'blue'    => ['#2563eb','rgba(37,99,235,.12)'],
+    'indigo'  => ['#4f46e5','rgba(79,70,229,.12)'],
+    'violet'  => ['#7c3aed','rgba(124,58,237,.12)'],
+    'amber'   => ['#d97706','rgba(217,119,6,.12)'],
+    'rose'    => ['#e11d48','rgba(225,29,72,.12)'],
+    'pink'    => ['#db2777','rgba(219,39,119,.12)'],
+];
 ?>
 <style>
-.portal-bg {
-    min-height:100vh;
-    <?= $heroBgStyle ?: "background: linear-gradient(170deg, #111318 0%, #1a1d24 40%, #15181e 100%);" ?>
-    position:relative;
-}
-.portal-bg::before {
-    content:'';
-    position:fixed;
-    top:0;left:0;right:0;bottom:0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-    background-size:200px 200px;
-    pointer-events:none;
-    z-index:0;
-}
-.portal-bg > * { position:relative; z-index:1; }
-.portal-bg::after {
-    content:'';
-    position:fixed;
-    top:-20%;right:-10%;
-    width:600px;height:600px;
-    background:radial-gradient(circle, rgba(16,185,129,0.06) 0%, transparent 70%);
-    pointer-events:none;
-    z-index:0;
-}
-.app-tile {
-    width:105px;
-    height:112px;
-    border-radius:14px;
-    background:rgba(255,255,255,0.05);
-    border:1px solid rgba(255,255,255,0.08);
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    text-decoration:none;
-    transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
-    cursor:pointer;
-    position:relative;
-    overflow:hidden;
-}
-.app-tile::before {
-    content:'';
-    position:absolute;
-    top:0;left:0;right:0;
-    height:3px;
-    opacity:0.8;
-    transition:opacity 0.3s;
-}
-.app-tile:hover {
-    background:rgba(255,255,255,0.12);
-    border-color:rgba(255,255,255,0.15);
-    transform:translateY(-6px);
-    box-shadow:0 12px 32px rgba(0,0,0,0.3);
-}
-.app-tile:hover::before { opacity:1; height:3px; }
-.app-tile .tile-icon {
-    width:40px;
-    height:40px;
-    border-radius:10px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    margin-bottom:8px;
-    transition:transform 0.3s;
-}
-.app-tile:hover .tile-icon { transform:scale(1.1); }
-.app-tile .tile-name {
-    font-size:11px;
-    font-weight:700;
-    color:rgba(255,255,255,0.85);
-    text-align:center;
-    line-height:1.2;
-    transition:color 0.3s;
-}
-.app-tile:hover .tile-name { color:#fff; }
-.app-tile .tile-sub {
-    font-size:9px;
-    color:rgba(255,255,255,0.3);
-    text-align:center;
-    line-height:1.3;
-    margin-top:2px;
-    transition:color 0.3s;
-}
-.app-tile:hover .tile-sub { color:rgba(255,255,255,0.5); }
-.logo-strip {
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:20px;
-    opacity:0.5;
-    transition:opacity 0.3s;
-}
-.logo-strip:hover { opacity:0.8; }
-.logo-strip img {
-    height:36px;
-    width:auto;
-    max-width:80px;
-    object-fit:contain;
-    filter:brightness(0) invert(1);
-    opacity:0.7;
-}
+*{box-sizing:border-box}
+.portal-page{width:100%;min-height:100vh;padding:32px 18px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(240,253,250,.92),rgba(239,246,255,.88)<?= !empty($heroBg) ? '' : '' ?>)<?= !empty($heroBg) ? ",url('".\App\Helpers\H::e($heroBg)."')" : '' ?>;background-size:cover;background-position:center;background-attachment:fixed}
+.portal-shell{width:100%;max-width:1120px;margin:0 auto}
+.portal-header{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:18px}
+.portal-brand{display:flex;align-items:center;gap:13px;min-width:0}
+.portal-logo{width:58px;height:58px;border-radius:18px;background:#fff;box-shadow:0 12px 30px rgba(15,23,42,.10);border:1px solid rgba(255,255,255,.80);object-fit:contain;padding:8px}
+.portal-brand-title{margin:0;font-size:24px;line-height:1.15;font-weight:900;letter-spacing:-.03em;color:#0f172a}
+.portal-brand-subtitle{margin:4px 0 0;font-size:13px;color:#64748b}
+.portal-year{padding:9px 13px;border-radius:999px;background:rgba(255,255,255,.70);border:1px solid rgba(255,255,255,.85);color:#334155;font-size:13px;font-weight:800;box-shadow:0 10px 24px rgba(15,23,42,.06);white-space:nowrap}
+.portal-layout{display:grid;grid-template-columns:.9fr 1.1fr;gap:18px;align-items:stretch}
+.portal-welcome{position:relative;border-radius:30px;background:linear-gradient(135deg,rgba(15,118,110,.96),rgba(20,184,166,.90));color:#fff;padding:32px;overflow:hidden;box-shadow:0 24px 60px rgba(15,118,110,.24);display:flex;align-items:center}
+.portal-welcome::before{content:"";position:absolute;width:220px;height:220px;right:-80px;top:-80px;border-radius:999px;background:rgba(255,255,255,.16)}
+.portal-welcome::after{content:"";position:absolute;width:150px;height:150px;left:-50px;bottom:-60px;border-radius:999px;background:rgba(255,255,255,.10)}
+.portal-welcome-inner{position:relative;z-index:1;width:100%}
+.portal-badge{display:inline-flex;align-items:center;padding:7px 11px;border-radius:999px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.24);font-size:12px;font-weight:800;margin-bottom:16px}
+.portal-welcome h1{margin:0;font-size:40px;line-height:1.08;font-weight:950;letter-spacing:-.045em}
+.portal-welcome p{margin:15px 0 0;font-size:15px;line-height:1.7;opacity:.93;max-width:520px}
+.portal-panel{border-radius:30px;padding:20px;background:rgba(255,255,255,.58);border:1px solid rgba(255,255,255,.70);box-shadow:0 24px 60px rgba(15,23,42,.10);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.portal-panel-title{margin-bottom:16px}
+.portal-panel-title h2{margin:0;font-size:22px;font-weight:950;letter-spacing:-.03em}
+.portal-panel-title p{margin:5px 0 0;color:#64748b;font-size:13px}
+.portal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.portal-card{--accent:#0f766e;--accent-soft:rgba(15,118,110,.10);position:relative;min-height:138px;border-radius:22px;padding:16px;background:rgba(255,255,255,.90);border:1px solid rgba(255,255,255,.86);box-shadow:0 14px 32px rgba(15,23,42,.08);color:#0f172a;text-decoration:none;display:flex;gap:14px;align-items:center;overflow:hidden;transition:.20s ease}
+.portal-card:hover{transform:translateY(-3px);box-shadow:0 20px 42px rgba(15,23,42,.13);color:#0f172a;text-decoration:none}
+.portal-card::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 96% 6%,var(--accent-soft),transparent 36%),linear-gradient(90deg,var(--accent-soft),transparent 34%);pointer-events:none}
+.portal-card-media{position:relative;z-index:1;width:72px;height:72px;border-radius:21px;background:#fff;border:1px solid rgba(15,23,42,.06);box-shadow:0 12px 24px rgba(15,23,42,.08);display:flex;align-items:center;justify-content:center;flex:0 0 auto;overflow:hidden}
+.portal-card-media::before{content:"";position:absolute;inset:7px;border-radius:17px;background:var(--accent-soft)}
+.portal-card-media img{position:relative;z-index:1;width:58px;height:58px;object-fit:contain;display:block;transition:.20s ease}
+.portal-card:hover .portal-card-media img{transform:scale(1.08)}
+.portal-card-letter{position:relative;z-index:1;width:48px;height:48px;border-radius:16px;display:none;align-items:center;justify-content:center;color:#fff;background:var(--accent);font-size:23px;font-weight:950}
+.portal-card-content{position:relative;z-index:1;min-width:0;flex:1}
+.portal-card-content h3{margin:0;font-size:17px;line-height:1.2;font-weight:950;letter-spacing:-.02em}
+.portal-card-content p{margin:6px 0 0;color:#64748b;font-size:12.5px;line-height:1.45}
+.portal-card-action{position:relative;z-index:1;margin-top:11px;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:900}
+.portal-card-action span{transition:.18s ease}
+.portal-card:hover .portal-card-action span{transform:translateX(3px)}
+.portal-footer{margin-top:18px;display:flex;align-items:center;justify-content:space-between;gap:14px;color:#475569;font-size:13px}
+.portal-footer a{color:#0f5f59;text-decoration:none;font-weight:850}
+.portal-footer a:hover{text-decoration:underline}
+@media(max-width:980px){.portal-layout{grid-template-columns:1fr}.portal-welcome{min-height:360px}.portal-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.portal-card{flex-direction:column;text-align:center;min-height:170px;justify-content:center}}
+@media(max-width:760px){.portal-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:680px){.portal-page{padding:22px 12px;align-items:flex-start}.portal-header{align-items:flex-start;flex-direction:column}.portal-brand-title{font-size:21px}.portal-welcome{border-radius:25px;padding:24px;min-height:auto}.portal-welcome h1{font-size:30px}.portal-panel{border-radius:25px;padding:14px}.portal-card{min-height:160px;border-radius:20px;padding:14px}.portal-footer{flex-direction:column;align-items:center}}
+@media(max-width:430px){.portal-grid{grid-template-columns:1fr}.portal-card{min-height:132px;flex-direction:row;text-align:left;justify-content:flex-start}}
 </style>
 
-<div class="portal-bg">
-    <div style="max-width:780px;margin:0 auto;padding:40px 16px 20px">
-
+<main class="portal-page">
+    <div class="portal-shell">
         <!-- Header -->
-        <div style="text-align:center;margin-bottom:12px">
-            <?php
-            $heroLogos = [];
-            if (!empty($settings['hero_logos'])) {
-                $heroLogos = json_decode($settings['hero_logos'], true) ?? [];
-            }
-            ?>
-            <?php if (!empty($heroLogos)): ?>
-            <!-- Uploaded logos -->
-            <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:14px;flex-wrap:wrap">
-                <?php foreach ($heroLogos as $logo): ?>
-                <img src="<?= \App\Helpers\H::e($logo) ?>" alt="Logo" style="height:96px;width:auto;max-width:180px;object-fit:contain;opacity:0.95;border-radius:10px;background:rgba(255,255,255,0.1);padding:8px 16px">
-                <?php endforeach; ?>
+        <header class="portal-header">
+            <div class="portal-brand">
+                <?php if (!empty($heroLogos)): ?>
+                    <img class="portal-logo" src="<?= \App\Helpers\H::e($heroLogos[0]) ?>" alt="Logo">
+                <?php else: ?>
+                    <div class="portal-logo" style="display:flex;align-items:center;justify-content:center;color:#0f766e;font-size:26px;font-weight:900">P</div>
+                <?php endif; ?>
+                <div>
+                    <h2 class="portal-brand-title"><?= \App\Helpers\H::e($settings['school_name'] ?? 'Portal Digital') ?></h2>
+                    <p class="portal-brand-subtitle">Satu pintu layanan digital sekolah</p>
+                </div>
             </div>
-            <?php else: ?>
-            <!-- Default icon -->
-            <div style="width:64px;height:64px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:16px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:14px">
-                <svg width="28" height="28" fill="none" stroke="#fbbf24" stroke-width="1.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                </svg>
-            </div>
-            <?php endif; ?>
-            <h1 style="margin:0 0 4px;font-size:20px;font-weight:800;color:rgba(255,255,255,0.9);letter-spacing:-0.01em">
-                Portal Digital
-            </h1>
-            <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.35);letter-spacing:0.1em;text-transform:uppercase;font-weight:500">
-                SMP Muhammadiyah Unggulan Ashidiq
-            </p>
-        </div>
+            <div class="portal-year">PORTAL · <?= date('Y') ?></div>
+        </header>
 
-        <!-- Announcement -->
-        <?php if (!empty($announcements)): ?>
-        <div x-data="{ open: true }" x-show="open" x-cloak style="margin-bottom:22px">
-            <div style="background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.15);border-radius:12px;padding:12px 16px;display:flex;align-items:flex-start;gap:10px">
-                <span style="width:6px;height:6px;border-radius:50%;background:#fbbf24;margin-top:6px;flex-shrink:0"></span>
-                <div style="flex:1;min-width:0">
-                    <p style="margin:0;font-size:12px;font-weight:700;color:rgba(255,255,255,0.8)">
-                        <?= \App\Helpers\H::e($announcements[0]['title']) ?>
-                    </p>
-                    <?php if (!empty($announcements[0]['content'])): ?>
-                    <p style="margin:3px 0 0;font-size:11px;color:rgba(255,255,255,0.35);line-height:1.4">
-                        <?= \App\Helpers\H::e(mb_strimwidth($announcements[0]['content'], 0, 140, '...')) ?>
-                    </p>
+        <section class="portal-layout">
+            <!-- Left: Welcome -->
+            <aside class="portal-welcome">
+                <div class="portal-welcome-inner">
+                    <div class="portal-badge">Portal Sekolah Digital</div>
+                    <h1>Selamat Datang di <?= \App\Helpers\H::e($settings['school_name'] ?? 'Portal Digital') ?></h1>
+                    <p>Akses layanan sekolah lebih mudah dalam satu halaman. Pilih portal sesuai kebutuhan untuk masuk ke layanan digital sekolah.</p>
+                    <?php if (!empty($announcements)): ?>
+                    <div style="margin-top:20px;padding:12px 16px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);border-radius:14px">
+                        <p style="margin:0;font-size:12px;font-weight:700;color:#fbbf24">📢 <?= \App\Helpers\H::e($announcements[0]['title']) ?></p>
+                        <?php if (!empty($announcements[0]['content'])): ?>
+                        <p style="margin:4px 0 0;font-size:11px;opacity:.8;line-height:1.4"><?= \App\Helpers\H::e(mb_strimwidth($announcements[0]['content'], 0, 120, '...')) ?></p>
+                        <?php endif; ?>
+                    </div>
                     <?php endif; ?>
                 </div>
-                <button @click="open = false" style="background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.3);font-size:18px;line-height:1;padding:0">&times;</button>
-            </div>
-        </div>
-        <?php endif; ?>
+            </aside>
 
-        <!-- App Tiles Grid -->
-        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:12px">
-            <?php if (!empty($apps)): ?>
-            <?php
-            $catColors = [];
-            foreach ($categories as $cat) {
-                $catColors[$cat['id']] = $cat['color'] ?? 'emerald';
-            }
-            $colorHex = [
-                'emerald' => '#10b981', 'teal' => '#14b8a6', 'sky' => '#0ea5e9',
-                'blue' => '#3b82f6', 'indigo' => '#6366f1', 'violet' => '#8b5cf6',
-                'amber' => '#f59e0b', 'rose' => '#f43f5e', 'pink' => '#ec4899',
-            ];
-            ?>
-            <?php foreach ($apps as $app): ?>
-            <?php
-                $catColor = $catColors[$app['category_id'] ?? 0] ?? 'emerald';
-                $barColor = $colorHex[$catColor] ?? '#10b981';
-                $iconBg = $barColor;
-            ?>
-            <a href="/app/<?= \App\Helpers\H::e($app['slug']) ?>" class="app-tile" style="--cat:<?= $barColor ?>">
-                <style>.app-tile[style*="<?= $barColor ?>"]::before { background:<?= $barColor ?>; }</style>
-                <div class="tile-icon" style="background:<?= $barColor ?>15">
-                    <svg width="20" height="20" fill="none" stroke="<?= $barColor ?>" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6z"/>
-                    </svg>
+            <!-- Right: App Grid -->
+            <section class="portal-panel">
+                <div class="portal-panel-title">
+                    <h2>Pilih Layanan</h2>
+                    <p>Masuk ke aplikasi sekolah yang tersedia.</p>
                 </div>
-                <span class="tile-name"><?= \App\Helpers\H::e($app['name']) ?></span>
-                <span class="tile-sub"><?= \App\Helpers\H::e($app['category_name'] ?? '') ?></span>
-            </a>
-            <?php endforeach; ?>
-            <?php else: ?>
-            <p style="color:rgba(255,255,255,0.3);font-size:13px;text-align:center;padding:48px 0">Belum ada aplikasi</p>
-            <?php endif; ?>
-        </div>
-
-        <!-- Stats bar -->
-        <?php if (!empty($stats)): ?>
-        <div style="display:flex;justify-content:center;gap:32px;margin-top:28px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.06)">
-            <?php
-            $statItems = [
-                ['label' => 'Aplikasi', 'value' => $stats['total_apps'] ?? 0],
-                ['label' => 'Guru', 'value' => $stats['total_guru'] ?? 0],
-                ['label' => 'Siswa', 'value' => $stats['total_siswa'] ?? 0],
-                ['label' => 'Sistem', 'value' => $stats['total_systems'] ?? 0],
-            ];
-            ?>
-            <?php foreach ($statItems as $stat): ?>
-            <div style="text-align:center">
-                <p style="margin:0;font-size:18px;font-weight:800;color:rgba(255,255,255,0.8);line-height:1"><?= $stat['value'] ?></p>
-                <p style="margin:4px 0 0;font-size:9px;color:rgba(255,255,255,0.25);text-transform:uppercase;letter-spacing:0.1em;font-weight:600"><?= $stat['label'] ?></p>
-            </div>
-            <?php endforeach; ?>
-        </div>
-        <?php endif; ?>
+                <div class="portal-grid">
+                    <?php if (!empty($apps)): ?>
+                    <?php foreach ($apps as $app):
+                        $cc = $catColors[$app['category_color'] ?? 'emerald'] ?? ['#0f766e','rgba(15,118,110,.10)'];
+                        $accent = $cc[0]; $accentSoft = $cc[1];
+                        $initial = strtoupper(substr($app['name'], 0, 1));
+                        $hasLogo = !empty($app['logo']);
+                    ?>
+                    <a href="/app/<?= \App\Helpers\H::e($app['slug']) ?>" class="portal-card" style="--accent:<?= $accent ?>;--accent-soft:<?= $accentSoft ?>">
+                        <div class="portal-card-media">
+                            <?php if ($hasLogo): ?>
+                                <img src="<?= \App\Helpers\H::e($app['logo']) ?>" alt="<?= \App\Helpers\H::e($app['name']) ?>" onerror="this.style.display='none';this.parentNode.querySelector('.portal-card-letter').style.display='flex'">
+                            <?php endif; ?>
+                            <span class="portal-card-letter"<?= $hasLogo ? ' style="display:none"' : '' ?>><?= $initial ?></span>
+                        </div>
+                        <div class="portal-card-content">
+                            <h3><?= \App\Helpers\H::e($app['name']) ?></h3>
+                            <p><?= \App\Helpers\H::e($app['short_description'] ?? $app['description'] ?? '') ?></p>
+                            <div class="portal-card-action" style="color:<?= $accent ?>">Masuk <span>›</span></div>
+                        </div>
+                    </a>
+                    <?php endforeach; ?>
+                    <?php else: ?>
+                    <p style="grid-column:1/-1;text-align:center;color:#94a3b8;padding:40px 0;font-size:13px">Belum ada aplikasi</p>
+                    <?php endif; ?>
+                </div>
+            </section>
+        </section>
 
         <!-- Footer -->
-        <div style="text-align:center;padding:20px 0 8px;color:rgba(255,255,255,0.2);font-size:10px">
-            <?= \App\Helpers\H::e($settings['footer_text'] ?? '© 2025 SMP Muhammadiyah Unggulan Ashidiq.') ?>
-        </div>
+        <footer class="portal-footer">
+            <div><?= \App\Helpers\H::e($settings['footer_text'] ?? '© 2025 SMP Muhammadiyah Unggulan Ashidiq.') ?></div>
+            <?php if (!empty($settings['school_email'])): ?>
+            <a href="mailto:<?= \App\Helpers\H::e($settings['school_email']) ?>"><?= \App\Helpers\H::e($settings['school_email']) ?></a>
+            <?php endif; ?>
+        </footer>
     </div>
-</div>
+</main>
