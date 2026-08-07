@@ -129,7 +129,7 @@ $heroBgStyle = !empty($heroBg)
             <!-- Uploaded logos -->
             <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:14px;flex-wrap:wrap">
                 <?php foreach ($heroLogos as $logo): ?>
-                <img src="<?= \App\Helpers\H::e($logo) ?>" alt="Logo" style="height:48px;width:auto;max-width:100px;object-fit:contain;filter:brightness(0) invert(1);opacity:0.85;border-radius:6px">
+                <img src="<?= \App\Helpers\H::e($logo) ?>" alt="Logo" style="height:48px;width:auto;max-width:100px;object-fit:contain;opacity:0.9;border-radius:6px;background:rgba(255,255,255,0.08);padding:4px 8px">
                 <?php endforeach; ?>
             </div>
             <?php else: ?>
