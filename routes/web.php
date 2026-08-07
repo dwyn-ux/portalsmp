@@ -51,4 +51,15 @@ $router->get('/admin/announcements/delete', [AdminController::class, 'announceme
 $router->get('/admin/settings', [AdminController::class, 'settingsIndex'], ['AuthMiddleware']);
 $router->post('/admin/settings', [AdminController::class, 'settingsUpdate'], ['AuthMiddleware', 'CsrfMiddleware']);
 
+// ─── SUPERVISI ───
+$router->get('/supervisi', [SupervisiController::class, 'index'], ['AuthMiddleware']);
+$router->get('/supervisi/api/guru', [SupervisiController::class, 'apiGuru'], ['AuthMiddleware']);
+$router->post('/supervisi/api/guru', [SupervisiController::class, 'apiGuru'], ['AuthMiddleware']);
+$router->get('/supervisi/api/penilaian', [SupervisiController::class, 'apiPenilaian'], ['AuthMiddleware']);
+$router->post('/supervisi/api/penilaian', [SupervisiController::class, 'apiPenilaian'], ['AuthMiddleware']);
+$router->get('/supervisi/api/settings', [SupervisiController::class, 'apiSettings'], ['AuthMiddleware']);
+$router->post('/supervisi/api/settings', [SupervisiController::class, 'apiSettings'], ['AuthMiddleware']);
+$router->get('/supervisi/api/stats', [SupervisiController::class, 'apiStats'], ['AuthMiddleware']);
+$router->get('/supervisi/api/rekap', [SupervisiController::class, 'apiRekap'], ['AuthMiddleware']);
+
 return $router;
