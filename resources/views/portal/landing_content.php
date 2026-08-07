@@ -181,13 +181,13 @@
                 <div class="flex flex-wrap gap-1.5">
                     <button @click="activeCategory = ''"
                             :style="activeCategory === '' ? 'background:#fbbf24;color:#064e3b' : 'background:#f0f0ec;color:#6b7280'"
-                            style="padding:7px 16px;font-size:12px;font-weight:600;border:none;cursor:pointer;transition:all 0.15s;border-radius:8px">
+                            style="padding:7px 16px;font-size:12px;font-weight:600;border:none;cursor:pointer;transition:all 0.15s;border-radius:20px">
                         Semua
                     </button>
                     <?php foreach ($categories as $cat): ?>
                     <button @click="activeCategory = '<?= \App\Helpers\H::e($cat['slug']) ?>'"
                             :style="activeCategory === '<?= \App\Helpers\H::e($cat['slug']) ?>' ? 'background:#fbbf24;color:#064e3b' : 'background:#f0f0ec;color:#6b7280'"
-                            style="padding:7px 16px;font-size:12px;font-weight:600;border:none;cursor:pointer;transition:all 0.15s;border-radius:8px">
+                            style="padding:7px 16px;font-size:12px;font-weight:600;border:none;cursor:pointer;transition:all 0.15s;border-radius:20px">
                         <?= \App\Helpers\H::e($cat['name']) ?>
                     </button>
                     <?php endforeach; ?>
