@@ -59,6 +59,7 @@ $router->post('/admin/supervisi-users', [AdminController::class, 'supervisiUsers
 $router->get('/supervisi/login', [SupervisiAuthController::class, 'showLogin']);
 $router->post('/supervisi/login', [SupervisiAuthController::class, 'login'], ['CsrfMiddleware']);
 $router->get('/supervisi/logout', [SupervisiAuthController::class, 'logout']);
+$router->post('/supervisi/auth/change-password', [SupervisiAuthController::class, 'changePassword']);
 $router->get('/supervisi', [SupervisiController::class, 'index']);
 $router->get('/supervisi/api/guru', [SupervisiController::class, 'apiGuru']);
 $router->post('/supervisi/api/guru', [SupervisiController::class, 'apiGuru']);

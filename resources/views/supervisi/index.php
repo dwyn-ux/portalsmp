@@ -285,6 +285,13 @@ Pengaturan
 <div class="form-group"><label>Kota/Kabupaten</label><input id="sKota" placeholder="Kota"></div>
 <button class="btn btn-primary" onclick="simpanSett()">Simpan Pengaturan</button>
 </div>
+<div class="card" style="max-width:520px;margin-top:16px">
+<h3>Ganti Password</h3>
+<div class="form-group"><label>Password Lama</label><input id="pwLama" type="password" placeholder="Masukkan password lama"></div>
+<div class="form-group"><label>Password Baru</label><input id="pwBaru" type="password" placeholder="Masukkan password baru"></div>
+<div class="form-group"><label>Konfirmasi Password Baru</label><input id="pwKonf" type="password" placeholder="Ulangi password baru"></div>
+<button class="btn btn-primary" onclick="gantiPw()">💾 Ganti Password</button>
+</div>
 </div>
 
 </div>
@@ -918,6 +925,30 @@ kepsek_kota: document.getElementById('sKota').value.trim()
 });
 toast('Pengaturan berhasil disimpan!');
 } catch (e) {}
+}
+
+async function gantiPw() {
+const lama = document.getElementById('pwLama').value;
+const baru = document.getElementById('pwBaru').value;
+const konf = document.getElementById('pwKonf').value;
+if (!lama || !baru || !konf) { toast('Semua field wajib diisi!', 'wn'); return; }
+if (baru.length < 6) { toast('Password baru minimal 6 karakter!', 'wn'); return; }
+if (baru !== konf) { toast('Konfirmasi password tidak cocok!', 'wn'); return; }
+try {
+const r = await api('/auth/change-password', {
+method: 'POST',
+headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+body: new URLSearchParams({ password_lama: lama, password_baru: baru }).toString()
+});
+if (r.ok) {
+toast('Password berhasil diganti!');
+document.getElementById('pwLama').value = '';
+document.getElementById('pwBaru').value = '';
+document.getElementById('pwKonf').value = '';
+} else {
+toast(r.error || 'Gagal mengganti password', 'er');
+}
+} catch (e) { toast('Gagal mengganti password', 'er'); }
 }
 
 async function ctkI(key, guruId) {

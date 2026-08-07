@@ -60,4 +60,51 @@ class SupervisiAuthController
         session_regenerate_id(true);
         Url::redirect('/supervisi/login');
     }
+
+    public function changePassword(): void
+    {
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (empty($_SESSION['supervisi_user'])) {
+            http_response_code(403);
+            echo json_encode(['error' => 'Unauthorized']);
+            exit;
+        }
+
+        $data = $_POST;
+        $lama = $data['password_lama'] ?? '';
+        $baru = $data['password_baru'] ?? '';
+
+        if ($lama === '' || $baru === '') {
+            http_response_code(422);
+            echo json_encode(['error' => 'Semua field wajib diisi']);
+            exit;
+        }
+
+        if (strlen($baru) < 6) {
+            http_response_code(422);
+            echo json_encode(['error' => 'Password minimal 6 karakter']);
+            exit;
+        }
+
+        $db = Database::getInstance();
+        $userId = (int) $_SESSION['supervisi_user']['id'];
+
+        $stmt = $db->prepare('SELECT password FROM supervisi_users WHERE id = ?');
+        $stmt->execute([$userId]);
+        $user = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if (!$user || !password_verify($lama, $user['password'])) {
+            http_response_code(422);
+            echo json_encode(['error' => 'Password lama salah']);
+            exit;
+        }
+
+        $hash = password_hash($baru, PASSWORD_DEFAULT);
+        $stmt2 = $db->prepare('UPDATE supervisi_users SET password = ? WHERE id = ?');
+        $stmt2->execute([$hash, $userId]);
+
+        echo json_encode(['ok' => true]);
+        exit;
+    }
 }
