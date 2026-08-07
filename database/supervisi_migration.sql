@@ -81,6 +81,6 @@ INSERT IGNORE INTO `supervisi_settings` (`setting_key`, `setting_value`) VALUES
 ('kepsek_unit', ''),
 ('kepsek_kota', '');
 
--- Seed admin supervisi (password: admin123)
+-- Seed admin supervisi
 INSERT IGNORE INTO `supervisi_users` (`username`, `password`, `name`, `role`) VALUES
-('admin', '$2y$12$XX5WHnX3olfQs5g/y2ALs.T90qj7Qn0fKzn8hQ15R/jSKPSRbaH1i', 'Administrator Supervisi', 'admin_sekolah');
+('KepsekSMP', '$2y$12$7nJGa.m9NtDeTLbKMfIhXODDN2qVBfBW9CCeciGZNycR1ImOIGhOC', 'Kepala Sekolah', 'kepsek');
