@@ -28,7 +28,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                     </svg>
                 </div>
-                <span class="font-bold text-sm" style="color:#065f46">SMP Muhammadiyah Unggulan Ashidiq</span>
+                <span style="background:#fbbf24;color:#064e3b;font-size:12px;font-weight:700;padding:3px 10px">SMP Muhammadiyah Unggulan Ashidiq</span>
             </div>
             <a href="#apps" class="text-sm text-gray-500 hover:text-emerald-800 font-medium transition hidden sm:block">Aplikasi</a>
         </div>
@@ -180,14 +180,14 @@
                 </div>
                 <div class="flex flex-wrap gap-1.5">
                     <button @click="activeCategory = ''"
-                            :style="activeCategory === '' ? 'background:#065f46;color:#f0fdf4' : 'background:#f0f0ec;color:#6b7280'"
-                            style="padding:7px 16px;font-size:12px;font-weight:600;border:none;cursor:pointer;transition:all 0.15s;border-radius:999px">
+                            :style="activeCategory === '' ? 'background:#fbbf24;color:#064e3b' : 'background:#f0f0ec;color:#6b7280'"
+                            style="padding:7px 16px;font-size:12px;font-weight:600;border:none;cursor:pointer;transition:all 0.15s;border-radius:8px">
                         Semua
                     </button>
                     <?php foreach ($categories as $cat): ?>
                     <button @click="activeCategory = '<?= \App\Helpers\H::e($cat['slug']) ?>'"
-                            :style="activeCategory === '<?= \App\Helpers\H::e($cat['slug']) ?>' ? 'background:#065f46;color:#f0fdf4' : 'background:#f0f0ec;color:#6b7280'"
-                            style="padding:7px 16px;font-size:12px;font-weight:600;border:none;cursor:pointer;transition:all 0.15s;border-radius:999px">
+                            :style="activeCategory === '<?= \App\Helpers\H::e($cat['slug']) ?>' ? 'background:#fbbf24;color:#064e3b' : 'background:#f0f0ec;color:#6b7280'"
+                            style="padding:7px 16px;font-size:12px;font-weight:600;border:none;cursor:pointer;transition:all 0.15s;border-radius:8px">
                         <?= \App\Helpers\H::e($cat['name']) ?>
                     </button>
                     <?php endforeach; ?>
