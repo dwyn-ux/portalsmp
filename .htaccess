@@ -6,6 +6,9 @@ Options -Indexes
 # Block .env
 RewriteRule ^\.env$ - [F,L]
 
+# Redirect /public/* to clean URL (prevent exposing directory structure)
+RewriteRule ^public/(.*)$ /$1 [R=301,L]
+
 # Serve existing files directly
 RewriteCond %{REQUEST_FILENAME} -f
 RewriteRule ^ - [L]
