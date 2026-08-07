@@ -86,7 +86,12 @@ table tr:hover td{background:#fafbfe}
 .checklist .cl-row.ind{padding-left:32px}
 .checklist .cl-no{width:36px;font-size:12px;color:var(--mu);flex-shrink:0}
 .checklist .cl-lbl{flex:1;font-size:13px}
-.checklist .cl-cb{width:18px;height:18px;accent-color:var(--ok);cursor:pointer;flex-shrink:0}
+.rad-grp{display:flex;gap:6px;flex-shrink:0}
+.rad-grp label{display:flex;align-items:center;gap:4px;cursor:pointer;font-size:11px;font-weight:600;padding:4px 8px;border-radius:5px;border:1.5px solid var(--br);transition:.15s;user-select:none}
+.rad-grp label:hover{border-color:#94a3b8;background:#f8fafc}
+.rad-grp label.ada{background:#dcfce7;border-color:#4ade80;color:var(--ok)}
+.rad-grp label.tdk{background:#fee2e2;border-color:#f87171;color:var(--er)}
+.rad-grp input[type=radio]{display:none}
 
 .score-bar{display:flex;align-items:center;gap:14px;margin-top:14px;padding:14px;background:#f8f9fc;border-radius:8px;flex-wrap:wrap}
 .score-bar .sb-item{font-size:13px}.score-bar .sb-val{font-weight:700;color:var(--pr)}
@@ -645,7 +650,14 @@ if (a.g2) return `<div class="cl-row group2"><span class="cl-no"></span><span cl
 return `<div class="cl-row${a.ind ? ' ind' : ''}">
 <span class="cl-no">${a.no}</span>
 <span class="cl-lbl">${a.label}</span>
-<input type="checkbox" class="cl-cb" data-aid="${a.id}" onchange="onCh('${key}')">
+<div class="rad-grp">
+<label class="" id="rl_ada_${key}_${a.id}">
+<input type="radio" name="r_${key}_${a.id}" value="1" onchange="onChRad('${key}','${a.id}',1)"> ✓ Ada
+</label>
+<label class="" id="rl_tdk_${key}_${a.id}">
+<input type="radio" name="r_${key}_${a.id}" value="0" onchange="onChRad('${key}','${a.id}',0)"> ✗ Tidak
+</label>
+</div>
 </div>`;
 }).join('')}
 </div>
@@ -668,8 +680,15 @@ if (d[key.toUpperCase()] || d[key]) {
 const pen = d[key.toUpperCase()] || d[key];
 const av = typeof pen.aspek_values === 'object' ? pen.aspek_values : JSON.parse(pen.aspek_values || '{}');
 Object.entries(av).forEach(([k, v]) => {
-const cb = document.querySelector(`#cklist_${key} [data-aid="${k}"]`);
-if (cb) cb.checked = !!v;
+const val = parseInt(v);
+const radio = document.querySelector(`input[name="r_${key}_${k}"][value="${val}"]`);
+if (radio) {
+radio.checked = true;
+const lbl = document.getElementById('rl_ada_' + key + '_' + k);
+const tl = document.getElementById('rl_tdk_' + key + '_' + k);
+if (lbl) lbl.className = val === 1 ? 'ada' : '';
+if (tl) tl.className = val === 0 ? 'tdk' : '';
+}
 });
 onCh(key);
 }
@@ -688,8 +707,8 @@ const def = DEF[key];
 let score = 0;
 def.aspek.forEach(a => {
 if (a.g || a.g2) return;
-const cb = document.querySelector(`#cklist_${key} [data-aid="${a.id}"]`);
-if (cb && cb.checked) score++;
+const checked = document.querySelector(`input[name="r_${key}_${a.id}"]:checked`);
+if (checked) score += parseInt(checked.value);
 });
 const p = pred(score, def.maks);
 document.getElementById('sk_' + key).textContent = score;
@@ -699,8 +718,25 @@ pd.className = 'pred badge ' + p.cls;
 document.getElementById('tl_' + key).value = getTL(score, def.maks);
 }
 
+function onChRad(key, aid, val) {
+// Update label styles
+const adaLabel = document.getElementById('rl_ada_' + key + '_' + aid);
+const tdkLabel = document.getElementById('rl_tdk_' + key + '_' + aid);
+if (adaLabel) adaLabel.className = val === 1 ? 'ada' : '';
+if (tdkLabel) tdkLabel.className = val === 0 ? 'tdk' : '';
+onCh(key);
+}
+
 function resetI(key) {
-document.querySelectorAll(`#cklist_${key} .cl-cb`).forEach(cb => cb.checked = false);
+const def = DEF[key];
+def.aspek.forEach(a => {
+if (a.g || a.g2) return;
+document.querySelectorAll(`input[name="r_${key}_${a.id}"]`).forEach(r => r.checked = false);
+const al = document.getElementById('rl_ada_' + key + '_' + a.id);
+const tl = document.getElementById('rl_tdk_' + key + '_' + a.id);
+if (al) al.className = '';
+if (tl) tl.className = '';
+});
 onCh(key);
 }
 
@@ -711,27 +747,26 @@ const av = {};
 let score = 0;
 def.aspek.forEach(a => {
 if (a.g || a.g2) return;
-const cb = document.querySelector(`#cklist_${key} [data-aid="${a.id}"]`);
-av[a.id] = cb ? cb.checked : false;
-if (av[a.id]) score++;
+const checked = document.querySelector(`input[name="r_${key}_${a.id}"]:checked`);
+if (checked) {
+av[a.id] = parseInt(checked.value);
+score += parseInt(checked.value);
+}
 });
+if (Object.keys(av).length < def.aspek.filter(a => !a.g && !a.g2).length) {
+toast('Masih ada aspek yang belum diisi!', 'wn'); return;
+}
 const p = pred(score, def.maks);
-try {
-await api('/penilaian', {
-method: 'POST',
-headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-body: new URLSearchParams({
-guru_id: curGuru,
-instrumen: key.toUpperCase(),
-aspek_values: JSON.stringify(av),
-score: score,
-max_score: def.maks,
-predicate: p.label,
-tindak_lanjut: document.getElementById('tl_' + key).value
-}).toString()
-});
-toast('Penilaian berhasil disimpan!');
-} catch (e) {}
+const fd = new FormData();
+fd.append('guru_id', curGuru);
+fd.append('instrumen', key.toUpperCase());
+fd.append('aspek_values', JSON.stringify(av));
+fd.append('score', score);
+fd.append('max_score', def.maks);
+fd.append('predicate', p.label);
+fd.append('tindak_lanjut', getTL(score, def.maks));
+const r = await api('/penilaian', { method: 'POST', body: fd });
+if (r.ok) { toast('Penilaian tersimpan!', 'ok'); onCh(key); } else { toast(r.error || 'Gagal menyimpan', 'er'); }
 }
 
 async function rrekap() {
