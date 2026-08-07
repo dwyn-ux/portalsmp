@@ -2,3 +2,30 @@ RewriteEngine On
 
 # Block access to sensitive directories
 RewriteRule ^(app|config|database|routes|storage|resources|vendor)/ - [F,L]
+
+# Block sensitive files
+RewriteRule ^\.env$ - [F,L]
+RewriteRule ^.*\.sql$ - [F,L]
+
+# Serve existing files directly
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# Disable directory listing
+Options -Indexes
+
+# Root path → portal (public/ has no index.php, Apache shows dir listing without this)
+RewriteRule ^$ ../index.php [L,QSA]
+
+# Route everything else to portal/supervisi index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ ../index.php [L,QSA]
+
+# Security headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>

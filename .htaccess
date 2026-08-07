@@ -1,5 +1,8 @@
 RewriteEngine On
 
+# Block .env
+RewriteRule ^\.env$ - [F,L]
+
 # Serve existing files directly
 RewriteCond %{REQUEST_FILENAME} -f
 RewriteRule ^ - [L]
