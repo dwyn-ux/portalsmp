@@ -3,11 +3,17 @@
  * Landing page — smpam-inspired, unique version.
  * Category-colored tiles + admin logo upload + clean dark bg.
  */
+
+// Background from admin upload, fallback to dark gradient
+$heroBg = $settings['hero_bg'] ?? '';
+$heroBgStyle = !empty($heroBg)
+    ? "background: linear-gradient(170deg, rgba(17,19,24,0.82), rgba(26,29,36,0.88)), url('".\App\Helpers\H::e($heroBg)."') no-repeat center center fixed; background-size:cover;"
+    : '';
 ?>
 <style>
 .portal-bg {
     min-height:100vh;
-    background: linear-gradient(170deg, #111318 0%, #1a1d24 40%, #15181e 100%);
+    <?= $heroBgStyle ?: "background: linear-gradient(170deg, #111318 0%, #1a1d24 40%, #15181e 100%);" ?>
     position:relative;
 }
 .portal-bg::before {
@@ -20,7 +26,6 @@
     z-index:0;
 }
 .portal-bg > * { position:relative; z-index:1; }
-/* Subtle color accents */
 .portal-bg::after {
     content:'';
     position:fixed;
@@ -46,7 +51,6 @@
     position:relative;
     overflow:hidden;
 }
-/* Category color top bar */
 .app-tile::before {
     content:'';
     position:absolute;
@@ -91,19 +95,20 @@
     transition:color 0.3s;
 }
 .app-tile:hover .tile-sub { color:rgba(255,255,255,0.5); }
-/* Logo scroll */
 .logo-strip {
     display:flex;
     align-items:center;
     justify-content:center;
-    gap:24px;
-    opacity:0.4;
+    gap:20px;
+    opacity:0.5;
     transition:opacity 0.3s;
 }
-.logo-strip:hover { opacity:0.7; }
+.logo-strip:hover { opacity:0.8; }
 .logo-strip img {
-    height:32px;
+    height:36px;
     width:auto;
+    max-width:80px;
+    object-fit:contain;
     filter:brightness(0) invert(1);
     opacity:0.7;
 }
