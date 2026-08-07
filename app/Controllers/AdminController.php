@@ -400,6 +400,17 @@ class AdminController
      */
     public function settingsIndex(): void
     {
+        // Handle logo delete via GET param
+        if (isset($_GET['delete_logo'])) {
+            $currentLogo = $this->settingModel->getAll()['hero_logos'] ?? '';
+            if ($currentLogo) {
+                Upload::delete($currentLogo);
+                $this->settingModel->updateMany(['hero_logos' => '']);
+                $_SESSION['flash_success'] = 'Logo berhasil dihapus.';
+            }
+            Url::redirect('/admin/settings');
+        }
+
         View::render('admin.settings', [
             'title' => 'Pengaturan - Admin',
             'settingsData' => $this->settingModel->getAll(),
@@ -441,15 +452,6 @@ class AdminController
 
         // Handle hero_logos — single logo file
         $currentLogo = isset($this->settingModel->getAll()['hero_logos']) ? $this->settingModel->getAll()['hero_logos'] : '';
-
-        // Delete logo via query param
-        if (isset($_GET['delete_logo']) && $currentLogo) {
-            Upload::delete($currentLogo);
-            $settings['hero_logos'] = '';
-            $this->settingModel->updateMany(['hero_logos' => '']);
-            $_SESSION['flash_success'] = 'Logo berhasil dihapus.';
-            Url::redirect('/admin/settings');
-        }
 
         if (!empty($_FILES['hero_logos']['name'])) {
             $logoFile = [
