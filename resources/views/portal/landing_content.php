@@ -115,10 +115,14 @@
         <!-- App Tiles Grid -->
         <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:14px">
             <?php if (!empty($apps)): ?>
+            <?php
+            $iconColors = ['emerald'=>'#059669','sky'=>'#0284c7','violet'=>'#7c3aed','amber'=>'#d97706','rose'=>'#e11d48','blue'=>'#2563eb','indigo'=>'#4f46e5','pink'=>'#db2777'];
+            ?>
             <?php foreach ($apps as $app): ?>
+            <?php $ic = $app['icon_color'] ?? 'emerald'; $stroke = $iconColors[$ic] ?? '#4b5563'; ?>
             <a href="/app/<?= \App\Helpers\H::e($app['slug']) ?>" class="app-tile">
-                <div class="tile-icon" style="background:<?= \App\Helpers\H::e($app['icon_color'] ?? 'emerald') ?>18">
-                    <svg width="20" height="20" fill="none" stroke="<?= \App\Helpers\H::e($app['icon_color'] ?? 'emerald') === 'emerald' ? '#059669' : (\App\Helpers\H::e($app['icon_color'] ?? '') === 'sky' ? '#0284c7' : (\App\Helpers\H::e($app['icon_color'] ?? '') === 'violet' ? '#7c3aed' : (\App\Helpers\H::e($app['icon_color'] ?? '') === 'amber' ? '#d97706' : (\App\Helpers\H::e($app['icon_color'] ?? '') === 'rose' ? '#e11d48' : '#4b5563'))))) ?>" viewBox="0 0 24 24">
+                <div class="tile-icon" style="background:<?= \App\Helpers\H::e($ic) ?>18">
+                    <svg width="20" height="20" fill="none" stroke="<?= $stroke ?>" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6z"/>
                     </svg>
                 </div>
