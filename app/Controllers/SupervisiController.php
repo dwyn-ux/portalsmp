@@ -19,16 +19,19 @@ class SupervisiController
 
     private function requireRole(): bool
     {
-        $role = $_SESSION['user']['role'] ?? '';
-        return in_array($role, ['admin', 'guru'], true);
+        $user = $_SESSION['supervisi_user'] ?? null;
+        return $user !== null;
     }
 
     private function deny(): void
     {
-        http_response_code(403);
-        header('Content-Type: application/json; charset=utf-8');
-        echo json_encode(['error' => 'Forbidden']);
-        exit;
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) || str_contains($_SERVER['HTTP_ACCEPT'] ?? '', 'application/json')) {
+            http_response_code(403);
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode(['error' => 'Forbidden']);
+            exit;
+        }
+        Url::redirect('/supervisi/login');
     }
 
     private function json(mixed $data, int $status = 200): void
@@ -50,6 +53,9 @@ class SupervisiController
 
     public function index(): void
     {
+        if (!$this->requireRole()) {
+            Url::redirect('/supervisi/login');
+        }
         View::render('supervisi.index', [
             'title' => 'Supervisi Akademik Guru',
         ]);
@@ -80,7 +86,7 @@ class SupervisiController
                 'kepsek_nip' => trim($data['kepsek_nip'] ?? ''),
                 'tanggal_supervisi' => $data['tanggal_supervisi'] ?? null,
                 'keterangan' => trim($data['keterangan'] ?? ''),
-                'created_by' => $_SESSION['user']['id'] ?? null,
+                'created_by' => $_SESSION['supervisi_user']['id'] ?? null,
             ]);
             $this->json(['ok' => true, 'id' => $id]);
         }
@@ -148,7 +154,7 @@ class SupervisiController
                 'max_score' => (int) ($data['max_score'] ?? 0),
                 'predicate' => trim($data['predicate'] ?? ''),
                 'tindak_lanjut' => trim($data['tindak_lanjut'] ?? ''),
-                'created_by' => $_SESSION['user']['id'] ?? null,
+                'created_by' => $_SESSION['supervisi_user']['id'] ?? null,
             ]);
             $this->json(['ok' => true]);
         }

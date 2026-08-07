@@ -51,15 +51,22 @@ $router->get('/admin/announcements/delete', [AdminController::class, 'announceme
 $router->get('/admin/settings', [AdminController::class, 'settingsIndex'], ['AuthMiddleware']);
 $router->post('/admin/settings', [AdminController::class, 'settingsUpdate'], ['AuthMiddleware', 'CsrfMiddleware']);
 
+// Supervisi Users (admin manage)
+$router->get('/admin/supervisi-users', [AdminController::class, 'supervisiUsers'], ['AuthMiddleware']);
+$router->post('/admin/supervisi-users', [AdminController::class, 'supervisiUsers'], ['AuthMiddleware']);
+
 // ─── SUPERVISI ───
-$router->get('/supervisi', [SupervisiController::class, 'index'], ['AuthMiddleware']);
-$router->get('/supervisi/api/guru', [SupervisiController::class, 'apiGuru'], ['AuthMiddleware']);
-$router->post('/supervisi/api/guru', [SupervisiController::class, 'apiGuru'], ['AuthMiddleware']);
-$router->get('/supervisi/api/penilaian', [SupervisiController::class, 'apiPenilaian'], ['AuthMiddleware']);
-$router->post('/supervisi/api/penilaian', [SupervisiController::class, 'apiPenilaian'], ['AuthMiddleware']);
-$router->get('/supervisi/api/settings', [SupervisiController::class, 'apiSettings'], ['AuthMiddleware']);
-$router->post('/supervisi/api/settings', [SupervisiController::class, 'apiSettings'], ['AuthMiddleware']);
-$router->get('/supervisi/api/stats', [SupervisiController::class, 'apiStats'], ['AuthMiddleware']);
-$router->get('/supervisi/api/rekap', [SupervisiController::class, 'apiRekap'], ['AuthMiddleware']);
+$router->get('/supervisi/login', [SupervisiAuthController::class, 'showLogin']);
+$router->post('/supervisi/login', [SupervisiAuthController::class, 'login'], ['CsrfMiddleware']);
+$router->get('/supervisi/logout', [SupervisiAuthController::class, 'logout']);
+$router->get('/supervisi', [SupervisiController::class, 'index']);
+$router->get('/supervisi/api/guru', [SupervisiController::class, 'apiGuru']);
+$router->post('/supervisi/api/guru', [SupervisiController::class, 'apiGuru']);
+$router->get('/supervisi/api/penilaian', [SupervisiController::class, 'apiPenilaian']);
+$router->post('/supervisi/api/penilaian', [SupervisiController::class, 'apiPenilaian']);
+$router->get('/supervisi/api/settings', [SupervisiController::class, 'apiSettings']);
+$router->post('/supervisi/api/settings', [SupervisiController::class, 'apiSettings']);
+$router->get('/supervisi/api/stats', [SupervisiController::class, 'apiStats']);
+$router->get('/supervisi/api/rekap', [SupervisiController::class, 'apiRekap']);
 
 return $router;

@@ -475,4 +475,63 @@ class AdminController
         $_SESSION['flash_success'] = 'Pengaturan berhasil diperbarui.';
         Url::redirect('/admin/settings');
     }
+
+    // ─── SUPERVISI USERS ───
+
+    public function supervisiUsers(): void
+    {
+        $db = \App\Core\Database::getInstance();
+
+        $method = $_GET['_method'] ?? $_POST['_method'] ?? $_SERVER['REQUEST_METHOD'];
+
+        if ($method === 'GET') {
+            $stmt = $db->query('SELECT id, username, name, role, is_active, last_login_at FROM supervisi_users ORDER BY created_at DESC');
+            $this->jsonResponse(['data' => $stmt->fetchAll(\PDO::FETCH_ASSOC)]);
+        }
+
+        if ($method === 'POST') {
+            $data = $_POST;
+            $name = trim($data['name'] ?? '');
+            $username = trim($data['username'] ?? '');
+            $password = $data['password'] ?? '';
+            $role = $data['role'] ?? 'kepsek';
+
+            if ($name === '' || $username === '') {
+                $this->jsonResponse(['error' => 'Nama dan username wajib'], 422);
+            }
+
+            // Cek duplikat
+            $check = $db->prepare('SELECT id FROM supervisi_users WHERE username = ?');
+            $check->execute([$username]);
+            if ($check->fetch()) {
+                $this->jsonResponse(['error' => 'Username sudah digunakan'], 422);
+            }
+
+            $stmt = $db->prepare('INSERT INTO supervisi_users (username, password, name, role) VALUES (?, ?, ?, ?)');
+            $stmt->execute([$username, password_hash($password, PASSWORD_DEFAULT), $name, $role]);
+            $this->jsonResponse(['ok' => true]);
+        }
+
+        if ($method === 'PUT') {
+            $data = $_POST;
+            $id = (int) ($data['id'] ?? 0);
+            if ($id <= 0) { $this->jsonResponse(['error' => 'id wajib'], 422); }
+
+            $stmt = $db->prepare('UPDATE supervisi_users SET is_active = ? WHERE id = ?');
+            $stmt->execute([(int) ($data['is_active'] ?? 1), $id]);
+            $this->jsonResponse(['ok' => true]);
+        }
+
+        if ($method === 'DELETE') {
+            $data = $_POST;
+            $id = (int) ($data['id'] ?? 0);
+            if ($id <= 0) { $this->jsonResponse(['error' => 'id wajib'], 422); }
+
+            $stmt = $db->prepare('DELETE FROM supervisi_users WHERE id = ?');
+            $stmt->execute([$id]);
+            $this->jsonResponse(['ok' => true]);
+        }
+
+        $this->jsonResponse(['error' => 'Method not allowed'], 405);
+    }
 }
