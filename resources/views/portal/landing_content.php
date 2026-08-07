@@ -1,9 +1,22 @@
 <?php
 /**
- * Landing page — editorial / anti-mainstream layout.
- * No blobs. No gradient text. No floating shapes. No wave dividers.
+ * Landing page — editorial layout.
+ * 60/30/10: Charcoal 60% | White 30% | Emerald 10%
  */
 ?>
+<style>
+/* Subtle noise texture for dark surfaces */
+.texture-noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 256px 256px;
+}
+/* Subtle diagonal lines */
+.texture-lines {
+    background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 20L20 0' stroke='white' stroke-opacity='0.03' stroke-width='0.5' fill='none'/%3E%3C/svg%3E");
+}
+</style>
+
 <!-- ═══ Navbar ═══ -->
 <nav class="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -21,29 +34,29 @@
     </div>
 </nav>
 
-<!-- ═══ Hero ═══ -->
-<section style="background:#111111" class="pt-14">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Top bar: date + label -->
-        <div class="flex items-center justify-between border-b border-white/10 py-4">
-            <span style="color:#666;font-size:11px;letter-spacing:0.1em;text-transform:uppercase">Portal Digital Sekolah</span>
-            <span style="color:#666;font-size:11px;letter-spacing:0.1em;text-transform:uppercase">Sistem Terintegrasi</span>
+<!-- ═══ Hero — 60% charcoal ═══ -->
+<section style="background:#1a1a1a" class="pt-14 texture-noise texture-lines relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <!-- Top rule -->
+        <div class="flex items-center justify-between py-4" style="border-bottom:1px solid rgba(255,255,255,0.06)">
+            <span style="color:#555;font-size:11px;letter-spacing:0.1em;text-transform:uppercase">Portal Digital Sekolah</span>
+            <span style="color:#555;font-size:11px;letter-spacing:0.1em;text-transform:uppercase">Sistem Terintegrasi</span>
         </div>
 
-        <!-- Main hero content -->
+        <!-- Main -->
         <div class="py-16 sm:py-20 lg:py-24">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8">
-                <!-- Left: Big type -->
+                <!-- Left: Type -->
                 <div class="lg:col-span-7">
                     <p style="color:#10b981;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1.5rem;font-weight:600">
                         Muhammadiyah Unggulan Ashidiq
                     </p>
-                    <h1 style="color:#fff;font-size:clamp(40px,8vw,80px);line-height:0.95;font-weight:800;letter-spacing:-0.03em;margin-bottom:2rem">
+                    <h1 style="color:#f5f5f5;font-size:clamp(40px,8vw,80px);line-height:0.95;font-weight:800;letter-spacing:-0.03em;margin-bottom:2rem">
                         Semua yang<br>
                         dibutuhkan,<br>
                         <span style="color:#10b981">satu pintu.</span>
                     </h1>
-                    <p style="color:#888;font-size:16px;line-height:1.6;max-width:420px;margin-bottom:2.5rem">
+                    <p style="color:#777;font-size:16px;line-height:1.6;max-width:420px;margin-bottom:2.5rem">
                         Aplikasi, data, dan informasi sekolah. Tidak perlu kemana-mana.
                     </p>
                     <a href="#apps" style="display:inline-flex;align-items:center;gap:8px;background:#10b981;color:#fff;font-size:14px;font-weight:600;padding:12px 28px;transition:background 0.2s" onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10b981'">
@@ -52,15 +65,15 @@
                     </a>
                 </div>
 
-                <!-- Right: Stats as big numbers -->
+                <!-- Right: Stats -->
                 <div class="lg:col-span-5 lg:flex lg:items-end">
                     <div style="width:100%">
                         <?php
                         $statItems = [
                             ['label' => 'Aplikasi', 'value' => $stats['total_apps'] ?? 0, 'color' => '#10b981'],
-                            ['label' => 'Guru', 'value' => $stats['total_guru'] ?? 0, 'color' => '#38bdf8'],
-                            ['label' => 'Siswa', 'value' => $stats['total_siswa'] ?? 0, 'color' => '#a78bfa'],
-                            ['label' => 'Sistem', 'value' => $stats['total_systems'] ?? 0, 'color' => '#fbbf24'],
+                            ['label' => 'Guru', 'value' => $stats['total_guru'] ?? 0, 'color' => '#10b981'],
+                            ['label' => 'Siswa', 'value' => $stats['total_siswa'] ?? 0, 'color' => '#f5f5f5'],
+                            ['label' => 'Sistem', 'value' => $stats['total_systems'] ?? 0, 'color' => '#f5f5f5'],
                         ];
                         ?>
                         <?php foreach ($statItems as $i => $stat): ?>
@@ -95,7 +108,7 @@
          x-transition:enter="transition ease-out duration-200"
          x-transition:enter-start="opacity-0 transform translate-y-4"
          x-transition:enter-end="opacity-100 transform translate-y-0">
-        <div style="background:#111;padding:24px;color:#fff;position:relative">
+        <div style="background:#1a1a1a;padding:24px;color:#fff;position:relative">
             <p style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:#10b981;margin-bottom:8px;font-weight:600">Pengumuman</p>
             <h3 style="font-size:18px;font-weight:700">Informasi Terbaru</h3>
             <button @click="open = false" style="position:absolute;top:16px;right:16px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:#666;border:1px solid rgba(255,255,255,0.1);background:none;cursor:pointer" onmouseover="this.style.borderColor='rgba(255,255,255,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'">
@@ -120,7 +133,7 @@
             <?php endforeach; ?>
         </div>
         <div style="padding:16px 24px;border-top:1px solid #f3f4f6">
-            <button @click="open = false" style="width:100%;background:#111;color:#fff;font-size:14px;font-weight:600;padding:12px;border:none;cursor:pointer;transition:background 0.2s" onmouseover="this.style.background='#333'" onmouseout="this.style.background='#111'">
+            <button @click="open = false" style="width:100%;background:#1a1a1a;color:#fff;font-size:14px;font-weight:600;padding:12px;border:none;cursor:pointer;transition:background 0.2s" onmouseover="this.style.background='#333'" onmouseout="this.style.background='#1a1a1a'">
                 Mengerti
             </button>
         </div>
@@ -128,20 +141,20 @@
 </div>
 <?php endif; ?>
 
-<!-- ═══ Applications ═══ -->
+<!-- ═══ Applications — 30% white ═══ -->
 <section id="apps" class="bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Header -->
         <div style="padding:64px 0 32px;border-bottom:1px solid #e5e7eb">
             <p style="color:#10b981;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:12px;font-weight:600">Digital</p>
             <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-                <h2 style="font-size:clamp(28px,4vw,40px);font-weight:800;color:#111;letter-spacing:-0.02em;line-height:1">Aplikasi</h2>
+                <h2 style="font-size:clamp(28px,4vw,40px);font-weight:800;color:#1a1a1a;letter-spacing:-0.02em;line-height:1">Aplikasi</h2>
                 <p style="font-size:13px;color:#9ca3af" x-data="appFilter()" x-text="filteredApps.length + ' tersedia'"></p>
             </div>
         </div>
 
         <div x-data="appFilter()" style="padding:32px 0">
-            <!-- Search + Filter row -->
+            <!-- Search + Filter -->
             <div class="flex flex-col sm:flex-row gap-3 mb-8">
                 <div class="relative flex-1">
                     <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -153,13 +166,13 @@
                 </div>
                 <div class="flex flex-wrap gap-1.5">
                     <button @click="activeCategory = ''"
-                            :style="activeCategory === '' ? 'background:#111;color:#fff' : 'background:#f3f4f6;color:#6b7280'"
+                            :style="activeCategory === '' ? 'background:#1a1a1a;color:#fff' : 'background:#f5f5f5;color:#6b7280'"
                             style="padding:8px 14px;font-size:12px;font-weight:600;border:none;cursor:pointer;transition:all 0.15s">
                         Semua
                     </button>
                     <?php foreach ($categories as $cat): ?>
                     <button @click="activeCategory = '<?= \App\Helpers\H::e($cat['slug']) ?>'"
-                            :style="activeCategory === '<?= \App\Helpers\H::e($cat['slug']) ?>' ? 'background:#111;color:#fff' : 'background:#f3f4f6;color:#6b7280'"
+                            :style="activeCategory === '<?= \App\Helpers\H::e($cat['slug']) ?>' ? 'background:#1a1a1a;color:#fff' : 'background:#f5f5f5;color:#6b7280'"
                             style="padding:8px 14px;font-size:12px;font-weight:600;border:none;cursor:pointer;transition:all 0.15s">
                         <?= \App\Helpers\H::e($cat['name']) ?>
                     </button>
@@ -167,33 +180,29 @@
                 </div>
             </div>
 
-            <!-- Apps as a list, not cards -->
+            <!-- Apps list -->
             <div>
                 <template x-for="app in filteredApps" :key="app.id">
                     <a :href="'/app/' + app.slug" style="display:flex;align-items:center;gap:16px;padding:16px 0;border-bottom:1px solid #f3f4f6;text-decoration:none;transition:background 0.15s" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background='transparent'">
-                        <!-- Icon -->
                         <div style="width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0"
                              :style="'background:' + app.icon_color + '15;color:' + (app.icon_color === 'emerald' ? '#059669' : app.icon_color === 'sky' ? '#0284c7' : app.icon_color === 'violet' ? '#7c3aed' : app.icon_color === 'amber' ? '#d97706' : app.icon_color === 'rose' ? '#e11d48' : '#4b5563')">
                             <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6z"/>
                             </svg>
                         </div>
-                        <!-- Name + desc -->
                         <div class="flex-1 min-w-0">
-                            <p style="font-size:14px;font-weight:600;color:#111" x-text="app.name"></p>
+                            <p style="font-size:14px;font-weight:600;color:#1a1a1a" x-text="app.name"></p>
                             <p style="font-size:12px;color:#9ca3af;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" x-text="app.short_description || app.description || ''"></p>
                         </div>
-                        <!-- Meta -->
                         <div class="hidden sm:flex items-center gap-2 flex-shrink-0">
-                            <span style="font-size:10px;font-weight:600;color:#9ca3af;background:#f3f4f6;padding:2px 8px;text-transform:uppercase;letter-spacing:0.05em" x-text="app.category_name"></span>
+                            <span style="font-size:10px;font-weight:600;color:#9ca3af;background:#f5f5f5;padding:2px 8px;text-transform:uppercase;letter-spacing:0.05em" x-text="app.category_name"></span>
                         </div>
-                        <!-- Arrow -->
                         <svg width="16" height="16" fill="none" stroke="#d1d5db" viewBox="0 0 24 24" class="flex-shrink-0"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </a>
                 </template>
             </div>
 
-            <!-- Empty state -->
+            <!-- Empty -->
             <div x-show="filteredApps.length === 0" x-cloak style="text-align:center;padding:64px 0">
                 <p style="font-size:14px;color:#6b7280;font-weight:500">Tidak ditemukan</p>
                 <p style="font-size:12px;color:#9ca3af;margin-top:4px">Coba kata kunci lain</p>
@@ -202,12 +211,12 @@
     </div>
 </section>
 
-<!-- ═══ Footer ═══ -->
-<footer style="background:#111;padding:48px 0">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<!-- ═══ Footer — 60% charcoal ═══ -->
+<footer style="background:#1a1a1a;padding:48px 0" class="texture-lines">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-                <p style="font-size:14px;font-weight:700;color:#fff;margin-bottom:8px">Portal Digital</p>
+                <p style="font-size:14px;font-weight:700;color:#f5f5f5;margin-bottom:8px">Portal Digital</p>
                 <p style="font-size:12px;color:#555;line-height:1.6;max-width:280px">
                     Pusat seluruh aplikasi digital sekolah.
                 </p>
