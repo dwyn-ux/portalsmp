@@ -163,7 +163,8 @@ INSERT INTO `settings` (`key`, `value`, `type`, `group`) VALUES
 ('school_instagram', '', 'text', 'social'),
 ('school_facebook', '', 'text', 'social'),
 ('announcement_running', '', 'textarea', 'general'),
-('footer_text', '© 2025 SMP Muhammadiyah Unggulan Ashidiq. All rights reserved.', 'text', 'general');
+('footer_text', '© 2025 SMP Muhammadiyah Unggulan Ashidiq. All rights reserved.', 'text', 'general'),
+('hero_logos', '[]', 'json', 'general');
 
 -- Seed sample applications
 INSERT INTO `applications` (`name`, `slug`, `description`, `short_description`, `url`, `category_id`, `target_user`, `icon_color`, `sort_order`, `status`, `version`, `developer`) VALUES
