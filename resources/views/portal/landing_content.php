@@ -119,11 +119,27 @@ $heroBgStyle = !empty($heroBg)
 
         <!-- Header -->
         <div style="text-align:center;margin-bottom:12px">
+            <?php
+            $heroLogos = [];
+            if (!empty($settings['hero_logos'])) {
+                $heroLogos = json_decode($settings['hero_logos'], true) ?? [];
+            }
+            ?>
+            <?php if (!empty($heroLogos)): ?>
+            <!-- Uploaded logos -->
+            <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:14px;flex-wrap:wrap">
+                <?php foreach ($heroLogos as $logo): ?>
+                <img src="<?= \App\Helpers\H::e($logo) ?>" alt="Logo" style="height:48px;width:auto;max-width:100px;object-fit:contain;filter:brightness(0) invert(1);opacity:0.85;border-radius:6px">
+                <?php endforeach; ?>
+            </div>
+            <?php else: ?>
+            <!-- Default icon -->
             <div style="width:64px;height:64px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:16px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:14px">
                 <svg width="28" height="28" fill="none" stroke="#fbbf24" stroke-width="1.5" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
                 </svg>
             </div>
+            <?php endif; ?>
             <h1 style="margin:0 0 4px;font-size:20px;font-weight:800;color:rgba(255,255,255,0.9);letter-spacing:-0.01em">
                 Portal Digital
             </h1>
@@ -131,21 +147,6 @@ $heroBgStyle = !empty($heroBg)
                 SMP Muhammadiyah Unggulan Ashidiq
             </p>
         </div>
-
-        <!-- Partner logos strip (from admin settings: hero_logos JSON) -->
-        <?php
-        $heroLogos = [];
-        if (!empty($settings['hero_logos'])) {
-            $heroLogos = json_decode($settings['hero_logos'], true) ?? [];
-        }
-        ?>
-        <?php if (!empty($heroLogos)): ?>
-        <div class="logo-strip" style="margin:16px 0 20px">
-            <?php foreach ($heroLogos as $logo): ?>
-                <img src="<?= \App\Helpers\H::e($logo) ?>" alt="Logo">
-            <?php endforeach; ?>
-        </div>
-        <?php endif; ?>
 
         <!-- Announcement -->
         <?php if (!empty($announcements)): ?>
