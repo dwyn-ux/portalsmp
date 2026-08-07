@@ -7,7 +7,7 @@
 // Background from admin upload, fallback to dark gradient
 $heroBg = $settings['hero_bg'] ?? '';
 $heroBgStyle = !empty($heroBg)
-    ? "background: linear-gradient(170deg, rgba(17,19,24,0.82), rgba(26,29,36,0.88)), url('".\App\Helpers\H::e($heroBg)."') no-repeat center center fixed; background-size:cover;"
+    ? "background: linear-gradient(170deg, rgba(6,95,70,0.78), rgba(6,78,59,0.85)), url('".\App\Helpers\H::e($heroBg)."') no-repeat center center fixed; background-size:cover;"
     : '';
 ?>
 <style>
@@ -129,7 +129,7 @@ $heroBgStyle = !empty($heroBg)
             <!-- Uploaded logos -->
             <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:14px;flex-wrap:wrap">
                 <?php foreach ($heroLogos as $logo): ?>
-                <img src="<?= \App\Helpers\H::e($logo) ?>" alt="Logo" style="height:72px;width:auto;max-width:140px;object-fit:contain;opacity:0.9;border-radius:8px;background:rgba(255,255,255,0.08);padding:6px 12px">
+                <img src="<?= \App\Helpers\H::e($logo) ?>" alt="Logo" style="height:96px;width:auto;max-width:180px;object-fit:contain;opacity:0.95;border-radius:10px;background:rgba(255,255,255,0.1);padding:8px 16px">
                 <?php endforeach; ?>
             </div>
             <?php else: ?>
