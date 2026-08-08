@@ -6,45 +6,53 @@ if (!isset($_SESSION['login']) || $_SESSION['role'] !== 'admin') {
 }
 
 require 'db.php';
-require_once 'phpexcel/Classes/PHPExcel.php';
 
 $success = 0;
 $fail = 0;
+$errors = [];
 
 if (isset($_POST['upload'])) {
     $file = $_FILES['file']['tmp_name'];
+    $ext = strtolower(pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION));
 
-    $excelReader = PHPExcel_IOFactory::createReaderForFile($file);
-    $excelObj = $excelReader->load($file);
-    $sheet = $excelObj->getActiveSheet();
-    $rows = $sheet->toArray(null, true, true, true);
+    if ($ext !== 'csv') {
+        $errors[] = "Format file harus .csv. Export Excel ke CSV terlebih dahulu.";
+    } else {
+        $handle = fopen($file, 'r');
+        if ($handle) {
+            $i = 0;
+            while (($row = fgetcsv($handle, 0, ',')) !== false) {
+                $i++;
+                if ($i == 1) continue; // skip header
 
-    foreach ($rows as $i => $row) {
-        if ($i == 1) continue; // skip header
+                if (count($row) < 7) { $fail++; continue; }
 
-        $nama = mysqli_real_escape_string($conn, $row['A']);
-        $nis = mysqli_real_escape_string($conn, $row['B']);
-        $nisn = mysqli_real_escape_string($conn, $row['C']);
-        $kelas = mysqli_real_escape_string($conn, $row['D']);
-        $jk = mysqli_real_escape_string($conn, $row['E']);
-        $tempat = mysqli_real_escape_string($conn, $row['F']);
-        $tgl = mysqli_real_escape_string($conn, $row['G']);
+                $nama   = mysqli_real_escape_string($conn, trim($row[0]));
+                $nis    = mysqli_real_escape_string($conn, trim($row[1]));
+                $nisn   = mysqli_real_escape_string($conn, trim($row[2]));
+                $kelas  = mysqli_real_escape_string($conn, trim($row[3]));
+                $jk     = mysqli_real_escape_string($conn, trim($row[4]));
+                $tempat = mysqli_real_escape_string($conn, trim($row[5]));
+                $tgl    = mysqli_real_escape_string($conn, trim($row[6]));
 
-        // Cek duplikat NISN
-        $cek = mysqli_query($conn, "SELECT * FROM kp_users WHERE username='$nisn'");
-        if (mysqli_num_rows($cek) > 0) {
-            $fail++;
-            continue;
+                if (empty($nisn)) { $fail++; continue; }
+
+                $cek = mysqli_query($conn, "SELECT 1 FROM kp_users WHERE username='$nisn' LIMIT 1");
+                if (mysqli_num_rows($cek) > 0) { $fail++; continue; }
+
+                $password = md5($nisn);
+                mysqli_query($conn, "INSERT INTO kp_users (username, password, role) VALUES ('$nisn', '$password', 'siswa')");
+                $user_id = mysqli_insert_id($conn);
+
+                $insert = mysqli_query($conn, "INSERT INTO kp_siswa (nama, nis, nisn, kelas, jenis_kelamin, tempat_lahir, tanggal_lahir, user_id)
+                VALUES ('$nama', '$nis', '$nisn', '$kelas', '$jk', '$tempat', '$tgl', '$user_id')");
+
+                $insert ? $success++ : $fail++;
+            }
+            fclose($handle);
+        } else {
+            $errors[] = "Gagal membaca file.";
         }
-
-        $password = md5($nisn);
-        mysqli_query($conn, "INSERT INTO kp_users (username, password, role) VALUES ('$nisn', '$password', 'siswa')");
-        $user_id = mysqli_insert_id($conn);
-
-        $insert = mysqli_query($conn, "INSERT INTO kp_siswa (nama, nis, nisn, kelas, jenis_kelamin, tempat_lahir, tanggal_lahir, user_id) 
-        VALUES ('$nama', '$nis', '$nisn', '$kelas', '$jk', '$tempat', '$tgl', '$user_id')");
-
-        $insert ? $success++ : $fail++;
     }
 }
 ?>
@@ -146,26 +154,32 @@ if (isset($_POST['upload'])) {
 </head>
 <body>
 
-<h2>Upload Excel (.xls / .xlsx)</h2>
+<h2>Upload Data Siswa (CSV)</h2>
 
-<?php if (isset($_POST['upload'])): ?>
+<?php if (!empty($errors)): ?>
+    <div class="info" style="background:#ff4444;border-radius:8px;padding:15px;">
+        <p><?= implode('<br>', $errors) ?></p>
+    </div>
+<?php endif; ?>
+
+<?php if (isset($_POST['upload']) && empty($errors)): ?>
     <div class="info">
         <p>✅ Berhasil: <?= $success ?> | ❌ Gagal: <?= $fail ?></p>
     </div>
 <?php endif; ?>
 
 <form method="post" enctype="multipart/form-data">
-    <input type="file" name="file" required>
+    <input type="file" name="file" accept=".csv" required>
     <button name="upload">Upload</button>
 </form>
 
 <div class="warning">
-    ⚠️ Format kolom pada Excel harus sama, <strong>jangan diubah urutannya</strong>!
+    ⚠️ Format kolom: Nama, NIS, NISN, Kelas, Jenis Kelamin, Tempat Lahir, Tanggal Lahir (satu baris header, koma sebagai pemisah)
 </div>
 
 <div class="link">
-    <p>📥 <a href="format_data_siswa.xls" download>Unduh Format Data Excel</a></p>
-    <p><a href="daftar_siswa.php">Lihat daftar kp_siswa</a></p>
+    <p>📥 <a href="format_data_siswa.csv" download>Unduh Format CSV</a></p>
+    <p><a href="daftar_siswa.php">Lihat daftar siswa</a></p>
     <p><a href="dashboard.php">← Kembali ke Dashboard</a></p>
 </div>
 
