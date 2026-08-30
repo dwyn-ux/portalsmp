@@ -48,8 +48,8 @@ CREATE TABLE IF NOT EXISTS `supervisi_guru` (
   PRIMARY KEY (`id`),
   KEY `fk_supervisi_guru_user` (`user_id`),
   KEY `fk_supervisi_guru_creator` (`created_by`),
-  CONSTRAINT `fk_supervisi_guru_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL,
-  CONSTRAINT `fk_supervisi_guru_creator` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL
+  CONSTRAINT `fk_supervisi_guru_user` FOREIGN KEY (`user_id`) REFERENCES `supervisi_users` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `fk_supervisi_guru_creator` FOREIGN KEY (`created_by`) REFERENCES `supervisi_users` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Penilaian instrumen
@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS `supervisi_penilaian` (
   UNIQUE KEY `uk_penilaian_guru_instrumen` (`guru_id`, `instrumen`),
   KEY `fk_penilaian_creator` (`created_by`),
   CONSTRAINT `fk_penilaian_guru` FOREIGN KEY (`guru_id`) REFERENCES `supervisi_guru` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk_penilaian_creator` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL
+  CONSTRAINT `fk_penilaian_creator` FOREIGN KEY (`created_by`) REFERENCES `supervisi_users` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Seed default settings

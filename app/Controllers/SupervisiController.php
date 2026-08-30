@@ -80,39 +80,54 @@ class SupervisiController
             if ($nama === '' || $sekolah === '' || $mapel === '') {
                 $this->json(['error' => 'nama, sekolah, mapel wajib'], 422);
             }
-            $id = $this->model->createGuru([
-                'nama' => $nama, 'sekolah' => $sekolah, 'mapel' => $mapel,
-                'jam_tatap_muka' => (int) ($data['jam_tatap_muka'] ?? 0),
-                'kepsek_nama' => trim($data['kepsek_nama'] ?? ''),
-                'kepsek_nip' => trim($data['kepsek_nip'] ?? ''),
-                'tanggal_supervisi' => $data['tanggal_supervisi'] ?? null,
-                'keterangan' => trim($data['keterangan'] ?? ''),
-                'created_by' => $_SESSION['supervisi_user']['id'] ?? null,
-            ]);
-            $this->json(['ok' => true, 'id' => $id]);
+            try {
+                $id = $this->model->createGuru([
+                    'nama' => $nama, 'sekolah' => $sekolah, 'mapel' => $mapel,
+                    'jam_tatap_muka' => (int) ($data['jam_tatap_muka'] ?? 0),
+                    'kepsek_nama' => trim($data['kepsek_nama'] ?? ''),
+                    'kepsek_nip' => trim($data['kepsek_nip'] ?? ''),
+                    'tanggal_supervisi' => $data['tanggal_supervisi'] ?? null,
+                    'keterangan' => trim($data['keterangan'] ?? ''),
+                    'created_by' => $_SESSION['supervisi_user']['id'] ?? null,
+                ]);
+                $this->json(['ok' => true, 'id' => $id]);
+            } catch (\Throwable $e) {
+                error_log('apiGuru POST error: ' . $e->getMessage());
+                $this->json(['error' => 'Gagal menyimpan data guru: ' . $e->getMessage()], 500);
+            }
         }
 
         if ($method === 'PUT') {
             $id = (int) ($data['id'] ?? 0);
             if ($id <= 0) { $this->json(['error' => 'id wajib'], 422); }
-            $this->model->updateGuru($id, [
-                'nama' => trim($data['nama'] ?? ''),
-                'sekolah' => trim($data['sekolah'] ?? ''),
-                'mapel' => trim($data['mapel'] ?? ''),
-                'jam_tatap_muka' => (int) ($data['jam_tatap_muka'] ?? 0),
-                'kepsek_nama' => trim($data['kepsek_nama'] ?? ''),
-                'kepsek_nip' => trim($data['kepsek_nip'] ?? ''),
-                'tanggal_supervisi' => $data['tanggal_supervisi'] ?? null,
-                'keterangan' => trim($data['keterangan'] ?? ''),
-            ]);
-            $this->json(['ok' => true]);
+            try {
+                $this->model->updateGuru($id, [
+                    'nama' => trim($data['nama'] ?? ''),
+                    'sekolah' => trim($data['sekolah'] ?? ''),
+                    'mapel' => trim($data['mapel'] ?? ''),
+                    'jam_tatap_muka' => (int) ($data['jam_tatap_muka'] ?? 0),
+                    'kepsek_nama' => trim($data['kepsek_nama'] ?? ''),
+                    'kepsek_nip' => trim($data['kepsek_nip'] ?? ''),
+                    'tanggal_supervisi' => $data['tanggal_supervisi'] ?? null,
+                    'keterangan' => trim($data['keterangan'] ?? ''),
+                ]);
+                $this->json(['ok' => true]);
+            } catch (\Throwable $e) {
+                error_log('apiGuru PUT error: ' . $e->getMessage());
+                $this->json(['error' => 'Gagal memperbarui data guru: ' . $e->getMessage()], 500);
+            }
         }
 
         if ($method === 'DELETE') {
             $id = (int) ($data['id'] ?? 0);
             if ($id <= 0) { $this->json(['error' => 'id wajib'], 422); }
-            $this->model->deleteGuru($id);
-            $this->json(['ok' => true]);
+            try {
+                $this->model->deleteGuru($id);
+                $this->json(['ok' => true]);
+            } catch (\Throwable $e) {
+                error_log('apiGuru DELETE error: ' . $e->getMessage());
+                $this->json(['error' => 'Gagal menghapus data guru: ' . $e->getMessage()], 500);
+            }
         }
 
         $this->json(['error' => 'Method not allowed'], 405);
@@ -143,21 +158,26 @@ class SupervisiController
             if ($guruId <= 0 || $instrumen === '') {
                 $this->json(['error' => 'guru_id dan instrumen wajib'], 422);
             }
-            $aspekValues = $data['aspek_values'] ?? '{}';
-            if (is_array($aspekValues)) {
-                $aspekValues = json_encode($aspekValues);
+            try {
+                $aspekValues = $data['aspek_values'] ?? '{}';
+                if (is_array($aspekValues)) {
+                    $aspekValues = json_encode($aspekValues);
+                }
+                $this->model->savePenilaian([
+                    'guru_id' => $guruId,
+                    'instrumen' => $instrumen,
+                    'aspek_values' => $aspekValues,
+                    'score' => (float) ($data['score'] ?? 0),
+                    'max_score' => (int) ($data['max_score'] ?? 0),
+                    'predicate' => trim($data['predicate'] ?? ''),
+                    'tindak_lanjut' => trim($data['tindak_lanjut'] ?? ''),
+                    'created_by' => $_SESSION['supervisi_user']['id'] ?? null,
+                ]);
+                $this->json(['ok' => true]);
+            } catch (\Throwable $e) {
+                error_log('apiPenilaian POST error: ' . $e->getMessage());
+                $this->json(['error' => 'Gagal menyimpan penilaian: ' . $e->getMessage()], 500);
             }
-            $this->model->savePenilaian([
-                'guru_id' => $guruId,
-                'instrumen' => $instrumen,
-                'aspek_values' => $aspekValues,
-                'score' => (float) ($data['score'] ?? 0),
-                'max_score' => (int) ($data['max_score'] ?? 0),
-                'predicate' => trim($data['predicate'] ?? ''),
-                'tindak_lanjut' => trim($data['tindak_lanjut'] ?? ''),
-                'created_by' => $_SESSION['supervisi_user']['id'] ?? null,
-            ]);
-            $this->json(['ok' => true]);
         }
 
         $this->json(['error' => 'Method not allowed'], 405);
