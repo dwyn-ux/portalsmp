@@ -70,5 +70,7 @@ $router->post('/supervisi/api/settings', [SupervisiController::class, 'apiSettin
 $router->get('/supervisi/api/stats', [SupervisiController::class, 'apiStats']);
 $router->get('/supervisi/api/rekap', [SupervisiController::class, 'apiRekap']);
 $router->post('/supervisi/api/settings/upload-logo', [SupervisiController::class, 'apiUploadLogo']);
+$router->get('/supervisi/template-guru', [SupervisiController::class, 'downloadTemplate']);
+$router->post('/supervisi/api/guru/bulk', [SupervisiController::class, 'apiGuruBulk']);
 
 return $router;

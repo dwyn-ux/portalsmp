@@ -215,6 +215,205 @@ class SupervisiController
         $this->json(['data' => $this->model->getRekap()]);
     }
 
+    public function downloadTemplate(): void
+    {
+        if (!$this->requireRole()) { $this->deny(); }
+
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="template_guru_binaan.csv"');
+
+        $output = fopen('php://output', 'w');
+        // BOM supaya Excel baca UTF-8
+        fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
+        fputcsv($output, [
+            'Nama Guru',
+            'Sekolah',
+            'Mata Pelajaran',
+            'Jam Tatap Muka',
+            'Nama Kepsek',
+            'NIP Kepsek',
+            'Tanggal Supervisi (YYYY-MM-DD)',
+            'Keterangan',
+        ], ';');
+        // Contoh baris
+        fputcsv($output, [
+            'Ahmad Fauzi, S.Pd.',
+            'SMP Muhammadiyah 1',
+            'Matematika',
+            '24',
+            'Dr. H. Bambang S., M.Pd.',
+            '196805151993011001',
+            '2026-09-15',
+            '',
+        ], ';');
+        fputcsv($output, [
+            'Siti Nurhaliza, S.Pd.',
+            'SMP Muhammadiyah 2',
+            'Bahasa Indonesia',
+            '18',
+            '',
+            '',
+            '',
+            '',
+        ], ';');
+        fclose($output);
+        exit;
+    }
+
+    public function apiGuruBulk(): void
+    {
+        if (!$this->requireRole()) { $this->deny(); }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->json(['error' => 'Method not allowed'], 405);
+        }
+
+        if (empty($_FILES['file']['name'])) {
+            $this->json(['error' => 'Pilih file CSV/XLSX'], 422);
+        }
+
+        $file = $_FILES['file'];
+        $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+
+        if (!in_array($ext, ['csv', 'xlsx', 'xls'])) {
+            $this->json(['error' => 'Format file tidak didukung. Gunakan CSV atau XLSX'], 422);
+        }
+
+        try {
+            $rows = [];
+
+            if ($ext === 'csv') {
+                $handle = fopen($file['tmp_name'], 'r');
+                if (!$handle) {
+                    $this->json(['error' => 'Gagal membuka file'], 500);
+                }
+                // Skip header
+                fgetcsv($handle, 0, ';');
+                while (($row = fgetcsv($handle, 0, ';')) !== false) {
+                    if (count($row) >= 3 && trim($row[0]) !== '') {
+                        $rows[] = $row;
+                    }
+                }
+                fclose($handle);
+            } else {
+                // XLSX - baca dengan PhpSpreadsheet atau fallback ke simple parser
+                $rows = $this->parseXlsx($file['tmp_name']);
+            }
+
+            if (empty($rows)) {
+                $this->json(['error' => 'File kosong atau format tidak sesuai'], 422);
+            }
+
+            $created = 0;
+            $errors = [];
+            $userId = $_SESSION['supervisi_user']['id'] ?? null;
+
+            foreach ($rows as $i => $row) {
+                $nama = trim($row[0] ?? '');
+                $sekolah = trim($row[1] ?? '');
+                $mapel = trim($row[2] ?? '');
+
+                if ($nama === '' || $sekolah === '' || $mapel === '') {
+                    $errors[] = 'Baris ' . ($i + 2) . ': Nama, Sekolah, dan Mapel wajib diisi';
+                    continue;
+                }
+
+                try {
+                    $this->model->createGuru([
+                        'nama' => $nama,
+                        'sekolah' => $sekolah,
+                        'mapel' => $mapel,
+                        'jam_tatap_muka' => (int) ($row[3] ?? 0),
+                        'kepsek_nama' => trim($row[4] ?? ''),
+                        'kepsek_nip' => trim($row[5] ?? ''),
+                        'tanggal_supervisi' => !empty($row[6]) ? $row[6] : null,
+                        'keterangan' => trim($row[7] ?? ''),
+                        'created_by' => $userId,
+                    ]);
+                    $created++;
+                } catch (\Throwable $e) {
+                    $errors[] = 'Baris ' . ($i + 2) . ' (' . $nama . '): ' . $e->getMessage();
+                }
+            }
+
+            $this->json([
+                'ok' => true,
+                'created' => $created,
+                'errors' => $errors,
+                'total_rows' => count($rows),
+            ]);
+        } catch (\Throwable $e) {
+            error_log('apiGuruBulk error: ' . $e->getMessage());
+            $this->json(['error' => 'Gagal memproses file: ' . $e->getMessage()], 500);
+        }
+    }
+
+    private function parseXlsx(string $tmpPath): array
+    {
+        // Coba pakai PhpSpreadsheet kalau ada
+        if (class_exists('PhpOffice\PhpSpreadsheet\IOFactory')) {
+            $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader('Xlsx');
+            $spreadsheet = $reader->load($tmpPath);
+            $sheet = $spreadsheet->getActiveSheet();
+            $rows = [];
+            $started = false;
+            foreach ($sheet->getRowIterator() as $row) {
+                $cells = [];
+                foreach ($row->getCellIterator() as $cell) {
+                    $cells[] = (string) $cell->getValue();
+                }
+                if (!$started) {
+                    $started = true;
+                    continue; // skip header
+                }
+                if (!empty(array_filter($cells))) {
+                    $rows[] = $cells;
+                }
+            }
+            return $rows;
+        }
+
+        // Fallback: konversi XLSX ke CSV pakai temporary
+        $zip = new \ZipArchive();
+        if ($zip->open($tmpPath) === true) {
+            $xml = $zip->getFromName('xl/worksheets/sheet1.xml');
+            $zip->close();
+
+            if ($xml) {
+                $rows = [];
+                // Simple XML parser untuk XLSX
+                libxml_use_internal_errors(true);
+                $doc = new \DOMDocument();
+                $doc->loadXML($xml);
+                $ns = $doc->getElementsByTagNameNS('http://schemas.openxmlformats.org/spreadsheetml/2006/main', 'row');
+
+                $started = false;
+                foreach ($ns as $row) {
+                    if (!$started) {
+                        $started = true;
+                        continue; // skip header
+                    }
+                    $cells = [];
+                    $cellNodes = $row->getElementsByTagNameNS('http://schemas.openxmlformats.org/spreadsheetml/2006/main', 'c');
+                    foreach ($cellNodes as $cell) {
+                        $val = '';
+                        $vNodes = $cell->getElementsByTagNameNS('http://schemas.openxmlformats.org/spreadsheetml/2006/main', 'v');
+                        if ($vNodes->length > 0) {
+                            $val = $vNodes->item(0)->textContent;
+                        }
+                        $cells[] = $val;
+                    }
+                    if (!empty(array_filter($cells))) {
+                        $rows[] = $cells;
+                    }
+                }
+                return $rows;
+            }
+        }
+
+        return [];
+    }
+
     public function apiUploadLogo(): void
     {
         if (!$this->requireRole()) { $this->deny(); }

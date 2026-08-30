@@ -241,7 +241,11 @@ Pengaturan
 <div class="page" id="p-guru">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
 <h3 style="font-size:15px">Daftar Guru Binaan</h3>
+<div style="display:flex;gap:8px">
+<a href="/supervisi/template-guru" class="btn btn-ghost btn-sm">📥 Download Template</a>
+<button class="btn btn-warning btn-sm" onclick="openMB()">📤 Upload Bulk</button>
 <button class="btn btn-primary" onclick="openMG()">+ Tambah Guru</button>
+</div>
 </div>
 <div class="search-box">
 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
@@ -344,6 +348,25 @@ Pengaturan
 <div class="modal-foot" style="justify-content:center">
 <button class="btn btn-ghost" onclick="closeMH()">Batal</button>
 <button class="btn btn-danger" onclick="confirmHapus()">Hapus</button>
+</div>
+</div>
+</div>
+
+<div class="modal-bg" id="mBulk">
+<div class="modal" style="max-width:480px">
+<h3>Upload Bulk Guru Binaan</h3>
+<div class="alert alert-info" style="margin-bottom:14px">
+<strong>📄 Format file:</strong> CSV atau XLSX. <a href="/supervisi/template-guru" style="font-weight:600">Download template di sini</a>.
+</div>
+<div class="form-group"><label>File (CSV/XLSX)</label><input type="file" id="mbFile" accept=".csv,.xlsx,.xls"></div>
+<div id="mbProgress" style="display:none;margin-bottom:14px">
+<div class="progress-bar"><div class="fill" id="mbFill" style="width:0%"></div></div>
+<p style="font-size:12px;color:var(--mu);margin-top:6px" id="mbStatus">Mengunggah...</p>
+</div>
+<div id="mbResult" style="display:none;margin-bottom:14px"></div>
+<div class="modal-foot">
+<button class="btn btn-ghost" onclick="closeMB()">Tutup</button>
+<button class="btn btn-primary" id="mbSubmit" onclick="uploadBulk()">📤 Upload</button>
 </div>
 </div>
 </div>
@@ -913,6 +936,73 @@ const res = await api('/guru');
 guruList = res.data || [];
 rguru();
 } catch (e) {}
+}
+
+function openMB() {
+document.getElementById('mbFile').value = '';
+document.getElementById('mbProgress').style.display = 'none';
+document.getElementById('mbResult').style.display = 'none';
+document.getElementById('mbSubmit').style.display = '';
+document.getElementById('mBulk').classList.add('show');
+}
+function closeMB() { document.getElementById('mBulk').classList.remove('show'); }
+
+async function uploadBulk() {
+const fileInput = document.getElementById('mbFile');
+const file = fileInput.files[0];
+if (!file) { toast('Pilih file terlebih dahulu!', 'wn'); return; }
+
+const ext = file.name.split('.').pop().toLowerCase();
+if (!['csv', 'xlsx', 'xls'].includes(ext)) {
+toast('Format file tidak didukung! Gunakan CSV atau XLSX.', 'wn');
+return;
+}
+
+document.getElementById('mbProgress').style.display = 'block';
+document.getElementById('mbFill').style.width = '50%';
+document.getElementById('mbStatus').textContent = 'Mengunggah file...';
+document.getElementById('mbSubmit').style.display = 'none';
+
+const fd = new FormData();
+fd.append('file', file);
+
+try {
+const r = await fetch(API + '/guru/bulk', {
+method: 'POST',
+body: fd
+});
+const j = await r.json();
+
+document.getElementById('mbFill').style.width = '100%';
+document.getElementById('mbStatus').textContent = 'Selesai!';
+
+if (j.ok) {
+let html = '<div class="alert alert-info">';
+html += '<strong>✅ Berhasil!</strong> ' + j.created + ' dari ' + j.total_rows + ' data guru berhasil ditambahkan.';
+html += '</div>';
+if (j.errors && j.errors.length > 0) {
+html += '<div class="alert alert-warn"><strong>⚠️ Peringatan:</strong><ul style="margin:6px 0 0 16px;font-size:12px">';
+j.errors.forEach(function(e) { html += '<li>' + e + '</li>'; });
+html += '</ul></div>';
+}
+document.getElementById('mbResult').innerHTML = html;
+document.getElementById('mbResult').style.display = 'block';
+toast('Upload berhasil! ' + j.created + ' data ditambahkan.');
+const res = await api('/guru');
+guruList = res.data || [];
+rguru();
+} else {
+document.getElementById('mbResult').innerHTML = '<div class="alert alert-err"><strong>❌ Gagal!</strong> ' + (j.error || 'Terjadi kesalahan') + '</div>';
+document.getElementById('mbResult').style.display = 'block';
+toast(j.error || 'Gagal upload', 'er');
+}
+} catch (e) {
+document.getElementById('mbFill').style.width = '100%';
+document.getElementById('mbStatus').textContent = 'Gagal!';
+document.getElementById('mbResult').innerHTML = '<div class="alert alert-err"><strong>❌ Error:</strong> ' + e.message + '</div>';
+document.getElementById('mbResult').style.display = 'block';
+toast('Gagal upload: ' + e.message, 'er');
+}
 }
 
 async function loadSett() {
