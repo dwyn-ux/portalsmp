@@ -226,13 +226,13 @@ class SupervisiController
         // BOM supaya Excel baca UTF-8
         fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
         fputcsv($output, [
-            'Nama Guru',
-            'Sekolah',
-            'Mata Pelajaran',
-            'Jam Tatap Muka',
-            'Nama Kepsek',
-            'NIP Kepsek',
-            'Tanggal Supervisi (YYYY-MM-DD)',
+            'Nama Guru *',
+            'Sekolah *',
+            'Mata Pelajaran *',
+            'Jam Tatap Muka *',
+            'Nama Kepsek *',
+            'NIP Kepsek *',
+            'Tanggal Supervisi (YYYY-MM-DD) *',
             'Keterangan',
         ], ';');
         // Contoh baris
@@ -244,17 +244,17 @@ class SupervisiController
             'Dr. H. Bambang S., M.Pd.',
             '196805151993011001',
             '2026-09-15',
-            '',
+            'Supervisi Rutin',
         ], ';');
         fputcsv($output, [
             'Siti Nurhaliza, S.Pd.',
             'SMP Muhammadiyah 2',
             'Bahasa Indonesia',
             '18',
-            '',
-            '',
-            '',
-            '',
+            'Dr. H. Ahmad Ridwan, M.Pd.',
+            '196703121992031002',
+            '2026-09-20',
+            'Supervisi Kelas X',
         ], ';');
         fclose($output);
         exit;
@@ -312,9 +312,14 @@ class SupervisiController
                 $nama = trim($row[0] ?? '');
                 $sekolah = trim($row[1] ?? '');
                 $mapel = trim($row[2] ?? '');
+                $jtm = trim($row[3] ?? '');
+                $kepsekNama = trim($row[4] ?? '');
+                $kepsekNip = trim($row[5] ?? '');
+                $tglSupervisi = trim($row[6] ?? '');
+                $keterangan = trim($row[7] ?? '');
 
-                if ($nama === '' || $sekolah === '' || $mapel === '') {
-                    $errors[] = 'Baris ' . ($i + 2) . ': Nama, Sekolah, dan Mapel wajib diisi';
+                if ($nama === '' || $sekolah === '' || $mapel === '' || $jtm === '' || $kepsekNama === '' || $kepsekNip === '' || $tglSupervisi === '') {
+                    $errors[] = 'Baris ' . ($i + 2) . ': Semua kolom wajib diisi (Nama, Sekolah, Mapel, JTM, Nama Kepsek, NIP Kepsek, Tanggal Supervisi)';
                     continue;
                 }
 
@@ -323,11 +328,11 @@ class SupervisiController
                         'nama' => $nama,
                         'sekolah' => $sekolah,
                         'mapel' => $mapel,
-                        'jam_tatap_muka' => (int) ($row[3] ?? 0),
-                        'kepsek_nama' => trim($row[4] ?? ''),
-                        'kepsek_nip' => trim($row[5] ?? ''),
-                        'tanggal_supervisi' => !empty($row[6]) ? $row[6] : null,
-                        'keterangan' => trim($row[7] ?? ''),
+                        'jam_tatap_muka' => (int) $jtm,
+                        'kepsek_nama' => $kepsekNama,
+                        'kepsek_nip' => $kepsekNip,
+                        'tanggal_supervisi' => $tglSupervisi,
+                        'keterangan' => $keterangan,
                         'created_by' => $userId,
                     ]);
                     $created++;
