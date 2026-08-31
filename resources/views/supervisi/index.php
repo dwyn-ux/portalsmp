@@ -356,9 +356,9 @@ Pengaturan
 <div class="modal" style="max-width:480px">
 <h3>Upload Bulk Guru Binaan</h3>
 <div class="alert alert-info" style="margin-bottom:14px">
-<strong>📄 Format file:</strong> CSV atau XLSX. <a href="/supervisi/template-guru" style="font-weight:600">Download template di sini</a>.
+<strong>📄 Format file:</strong> XLSX (Excel). <a href="/supervisi/template-guru" style="font-weight:600">Download template di sini</a>.
 </div>
-<div class="form-group"><label>File (CSV/XLSX)</label><input type="file" id="mbFile" accept=".csv,.xlsx,.xls"></div>
+<div class="form-group"><label>File (XLSX)</label><input type="file" id="mbFile" accept=".xlsx"></div>
 <div id="mbProgress" style="display:none;margin-bottom:14px">
 <div class="progress-bar"><div class="fill" id="mbFill" style="width:0%"></div></div>
 <p style="font-size:12px;color:var(--mu);margin-top:6px" id="mbStatus">Mengunggah...</p>
@@ -953,8 +953,8 @@ const file = fileInput.files[0];
 if (!file) { toast('Pilih file terlebih dahulu!', 'wn'); return; }
 
 const ext = file.name.split('.').pop().toLowerCase();
-if (!['csv', 'xlsx', 'xls'].includes(ext)) {
-toast('Format file tidak didukung! Gunakan CSV atau XLSX.', 'wn');
+if (ext !== 'xlsx') {
+toast('Format file tidak didukung! Gunakan file .xlsx', 'wn');
 return;
 }
 

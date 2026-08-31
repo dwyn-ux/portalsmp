@@ -219,13 +219,7 @@ class SupervisiController
     {
         if (!$this->requireRole()) { $this->deny(); }
 
-        header('Content-Type: text/csv; charset=utf-8');
-        header('Content-Disposition: attachment; filename="template_guru_binaan.csv"');
-
-        $output = fopen('php://output', 'w');
-        // BOM supaya Excel baca UTF-8
-        fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
-        fputcsv($output, [
+        $headers = [
             'Nama Guru *',
             'Sekolah *',
             'Mata Pelajaran *',
@@ -234,29 +228,147 @@ class SupervisiController
             'NIP Kepsek *',
             'Tanggal Supervisi (YYYY-MM-DD) *',
             'Keterangan',
-        ], ';');
-        // Contoh baris
-        fputcsv($output, [
-            'Ahmad Fauzi, S.Pd.',
-            'SMP Muhammadiyah 1',
-            'Matematika',
-            '24',
-            'Dr. H. Bambang S., M.Pd.',
-            '196805151993011001',
-            '2026-09-15',
-            'Supervisi Rutin',
-        ], ';');
-        fputcsv($output, [
-            'Siti Nurhaliza, S.Pd.',
-            'SMP Muhammadiyah 2',
-            'Bahasa Indonesia',
-            '18',
-            'Dr. H. Ahmad Ridwan, M.Pd.',
-            '196703121992031002',
-            '2026-09-20',
-            'Supervisi Kelas X',
-        ], ';');
-        fclose($output);
+        ];
+
+        $samples = [
+            ['Ahmad Fauzi, S.Pd.', 'SMP Muhammadiyah 1', 'Matematika', '24', 'Dr. H. Bambang S., M.Pd.', '196805151993011001', '2026-09-15', 'Supervisi Rutin'],
+            ['Siti Nurhaliza, S.Pd.', 'SMP Muhammadiyah 2', 'Bahasa Indonesia', '18', 'Dr. H. Ahmad Ridwan, M.Pd.', '196703121992031002', '2026-09-20', 'Supervisi Kelas X'],
+        ];
+
+        $this->sendXlsx('template_guru_binaan', $headers, $samples);
+    }
+
+    private function sendXlsx(string $filename, array $headers, array $rows): void
+    {
+        $tmpFile = tempnam(sys_get_temp_dir(), 'xlsx_');
+        $zip = new \ZipArchive();
+        $zip->open($tmpFile, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+
+        // Shared strings
+        $strings = array_merge($headers, ...array_map(fn($r) => $r, $rows));
+        $stringMap = [];
+        $stringXml = '<si>';
+        $idx = 0;
+        foreach ($strings as $s) {
+            $key = (string) $s;
+            if (!isset($stringMap[$key])) {
+                $stringMap[$key] = $idx++;
+                $stringXml .= '<t>' . htmlspecialchars($key, ENT_XML1) . '</t></si><si>';
+            }
+        }
+        $stringXml = substr($stringXml, 0, -4) . '</sst>';
+        $stringXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            . '<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="' . $idx . '" uniqueCount="' . $idx . '">'
+            . $stringXml;
+
+        // Build sheet rows XML
+        $sheetXml = '<sheetData>';
+        $rowNum = 1;
+
+        // Header row
+        $sheetXml .= '<row r="' . $rowNum . '" spans="1:' . count($headers) . '">';
+        $col = 'A';
+        foreach ($headers as $h) {
+            $sheetXml .= '<c r="' . $col . $rowNum . '" t="s" s="1"><v>' . $stringMap[$h] . '</v></c>';
+            $col++;
+        }
+        $sheetXml .= '</row>';
+        $rowNum++;
+
+        // Data rows
+        foreach ($rows as $row) {
+            $sheetXml .= '<row r="' . $rowNum . '" spans="1:' . count($row) . '">';
+            $col = 'A';
+            foreach ($row as $cell) {
+                $sheetXml .= '<c r="' . $col . $rowNum . '" t="s"><v>' . $stringMap[(string) $cell] . '</v></c>';
+                $col++;
+            }
+            $sheetXml .= '</row>';
+            $rowNum++;
+        }
+        $sheetXml .= '</sheetData>';
+
+        // Column widths
+        $colCount = count($headers);
+        $cols = '';
+        $widths = [22, 25, 20, 14, 25, 20, 24, 18];
+        for ($i = 0; $i < $colCount; $i++) {
+            $w = $widths[$i] ?? 16;
+            $cols .= '<col min="' . ($i + 1) . '" max="' . ($i + 1) . '" width="' . $w . '" customWidth="1"/>';
+        }
+
+        // Sheet1.xml
+        $sheet = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            . '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
+            . '<cols>' . $cols . '</cols>'
+            . $sheetXml
+            . '<autoFilter ref="A1:H' . ($rowNum - 1) . '"/>'
+            . '</worksheet>';
+
+        // [Content_Types].xml
+        $contentTypes = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            . '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
+            . '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
+            . '<Default Extension="xml" ContentType="application/xml"/>'
+            . '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>'
+            . '<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'
+            . '<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>'
+            . '<Override PartName="/xl/sharedStrings.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"/>'
+            . '</Types>';
+
+        // _rels/.rels
+        $rels = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            . '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+            . '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>'
+            . '</Relationships>';
+
+        // xl/_rels/workbook.xml.rels
+        $wbRels = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            . '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+            . '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>'
+            . '<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>'
+            . '<Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings" Target="sharedStrings.xml"/>'
+            . '</Relationships>';
+
+        // xl/workbook.xml
+        $workbook = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            . '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
+            . '<sheets><sheet name="Template Guru" sheetId="1" r:id="rId1"/></sheets>'
+            . '</workbook>';
+
+        // xl/styles.xml - minimal with bold header style
+        $styles = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            . '<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+            . '<fonts count="2">'
+            . '<font><sz val="11"/><name val="Calibri"/></font>'
+            . '<font><b/><sz val="11"/><name val="Calibri"/></font>'
+            . '</fonts>'
+            . '<fills count="3">'
+            . '<fill><patternFill patternType="none"/></fill>'
+            . '<fill><patternFill patternType="gray125"/></fill>'
+            . '<fill><patternFill patternType="solid"><fgColor rgb="FF1E3A5F"/></patternFill></fill>'
+            . '</fills>'
+            . '<borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders>'
+            . '<cellStyleXfs count="1"><xf/></cellStyleXfs>'
+            . '<cellXfs count="2">'
+            . '<xf/><xf fontId="1" fillId="2" borderId="0" applyFont="1" applyFill="1"/>'
+            . '</cellXfs>'
+            . '</styleSheet>';
+
+        $zip->addFromString('[Content_Types].xml', $contentTypes);
+        $zip->addFromString('_rels/.rels', $rels);
+        $zip->addFromString('xl/workbook.xml', $workbook);
+        $zip->addFromString('xl/_rels/workbook.xml.rels', $wbRels);
+        $zip->addFromString('xl/worksheets/sheet1.xml', $sheet);
+        $zip->addFromString('xl/sharedStrings.xml', $stringXml);
+        $zip->addFromString('xl/styles.xml', $styles);
+        $zip->close();
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment; filename="' . $filename . '.xlsx"');
+        header('Content-Length: ' . filesize($tmpFile));
+        readfile($tmpFile);
+        unlink($tmpFile);
         exit;
     }
 
@@ -269,36 +381,18 @@ class SupervisiController
         }
 
         if (empty($_FILES['file']['name'])) {
-            $this->json(['error' => 'Pilih file CSV/XLSX'], 422);
+            $this->json(['error' => 'Pilih file XLSX'], 422);
         }
 
         $file = $_FILES['file'];
         $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
 
-        if (!in_array($ext, ['csv', 'xlsx', 'xls'])) {
-            $this->json(['error' => 'Format file tidak didukung. Gunakan CSV atau XLSX'], 422);
+        if ($ext !== 'xlsx') {
+            $this->json(['error' => 'Format file tidak didukung. Gunakan file .xlsx'], 422);
         }
 
         try {
-            $rows = [];
-
-            if ($ext === 'csv') {
-                $handle = fopen($file['tmp_name'], 'r');
-                if (!$handle) {
-                    $this->json(['error' => 'Gagal membuka file'], 500);
-                }
-                // Skip header
-                fgetcsv($handle, 0, ';');
-                while (($row = fgetcsv($handle, 0, ';')) !== false) {
-                    if (count($row) >= 3 && trim($row[0]) !== '') {
-                        $rows[] = $row;
-                    }
-                }
-                fclose($handle);
-            } else {
-                // XLSX - baca dengan PhpSpreadsheet atau fallback ke simple parser
-                $rows = $this->parseXlsx($file['tmp_name']);
-            }
+            $rows = $this->parseXlsx($file['tmp_name']);
 
             if (empty($rows)) {
                 $this->json(['error' => 'File kosong atau format tidak sesuai'], 422);
