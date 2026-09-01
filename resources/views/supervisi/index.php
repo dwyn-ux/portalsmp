@@ -139,22 +139,24 @@ table tr:hover td{background:#fafbfe}
 
 @media print{
 *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
-body{background:#fff!important;font-size:11px}
+body{background:#fff!important;font-size:11px;margin:0!important;padding:0!important}
 .sidebar,.topbar,.btn,.toast-wrap,.modal-bg,.inst-sel,.tl-box,.btn-sm,.actions,.search-box{display:none!important}
-.main{margin:0!important}
-.content{padding:10px!important}
+.main{margin:0!important;padding:0!important;width:100%!important}
+.content{padding:0!important;margin:0!important}
 .page.print-show{display:block!important}
-.card{border:none!important;box-shadow:none!important;padding:10px 0!important}
-table{font-size:10px}table th{background:#e2e8f0!important}
+.card{border:none!important;box-shadow:none!important;padding:0!important;margin:0 0 10px 0!important;width:100%!important}
+table{font-size:10px;width:100%!important;border-collapse:collapse!important}
+table th{background:#e2e8f0!important}
+.checklist{width:100%!important}
 .checklist .cl-row{padding:4px 8px;font-size:10px}
 .checklist .cl-row.group{padding:6px 8px;font-size:10px}
 .checklist .cl-row.group2{padding:5px 8px 5px 24px;font-size:10px}
 .checklist .cl-row.ind{padding-left:24px}
-.score-bar{padding:8px;background:#f1f5f9!important}
+.score-bar{padding:8px;background:#f1f5f9!important;width:100%!important}
 .kop-print{display:block!important;text-align:center;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #000}
 .kop-print h2{font-size:14px;margin-bottom:2px}
 .kop-print p{font-size:11px;color:#333}
-@page{margin:1.5cm;size:A4}
+@page{margin:1cm;size:A4}
 }
 
 @media(max-width:768px){
