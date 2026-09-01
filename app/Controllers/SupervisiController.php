@@ -472,15 +472,33 @@ class SupervisiController
             return $rows;
         }
 
-        // Fallback: konversi XLSX ke CSV pakai temporary
+        // Fallback: parse XLSX manual via ZipArchive + XML
         $zip = new \ZipArchive();
         if ($zip->open($tmpPath) === true) {
+            // 1) Load shared strings table
+            $sharedStrings = [];
+            $ssXml = $zip->getFromName('xl/sharedStrings.xml');
+            if ($ssXml) {
+                $ssDoc = new \DOMDocument();
+                $ssDoc->loadXML($ssXml);
+                $siNodes = $ssDoc->getElementsByTagNameNS('http://schemas.openxmlformats.org/spreadsheetml/2006/main', 'si');
+                foreach ($siNodes as $si) {
+                    // Each <si> may contain one <t> or multiple <r><t> (rich text)
+                    $text = '';
+                    $tNodes = $si->getElementsByTagNameNS('http://schemas.openxmlformats.org/spreadsheetml/2006/main', 't');
+                    foreach ($tNodes as $t) {
+                        $text .= $t->textContent;
+                    }
+                    $sharedStrings[] = $text;
+                }
+            }
+
+            // 2) Parse sheet rows
             $xml = $zip->getFromName('xl/worksheets/sheet1.xml');
             $zip->close();
 
             if ($xml) {
                 $rows = [];
-                // Simple XML parser untuk XLSX
                 libxml_use_internal_errors(true);
                 $doc = new \DOMDocument();
                 $doc->loadXML($xml);
@@ -498,7 +516,14 @@ class SupervisiController
                         $val = '';
                         $vNodes = $cell->getElementsByTagNameNS('http://schemas.openxmlformats.org/spreadsheetml/2006/main', 'v');
                         if ($vNodes->length > 0) {
-                            $val = $vNodes->item(0)->textContent;
+                            $raw = $vNodes->item(0)->textContent;
+                            // t="s" means shared string index
+                            $type = $cell->getAttribute('t');
+                            if ($type === 's' && isset($sharedStrings[(int) $raw])) {
+                                $val = $sharedStrings[(int) $raw];
+                            } else {
+                                $val = $raw;
+                            }
                         }
                         $cells[] = $val;
                     }
