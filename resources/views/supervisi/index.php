@@ -139,7 +139,7 @@ table tr:hover td{background:#fafbfe}
 
 @media print{
 *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
-body{background:#fff!important;font-size:11px;margin:0!important;padding:0!important}
+html,body{display:block!important;margin:0!important;padding:0!important;width:100%!important;background:#fff!important;font-size:11px}
 .sidebar,.topbar,.btn,.toast-wrap,.modal-bg,.inst-sel,.tl-box,.btn-sm,.actions,.search-box{display:none!important}
 .main{margin:0!important;padding:0!important;width:100%!important}
 .content{padding:0!important;margin:0!important}
@@ -374,11 +374,6 @@ Pengaturan
 </div>
 
 <div class="toast-wrap" id="toastWrap"></div>
-
-<div class="kop-print" id="kopPrint">
-<h2>LAPORAN SUPERVISI AKADEMIK GURU</h2>
-<p id="kopInfo">Sekolah: - | Kepala Sekolah: - | NIP: -</p>
-</div>
 
 <script>
 const API = '/supervisi/api';
@@ -1079,49 +1074,54 @@ toast(r.error || 'Gagal mengganti password', 'er');
 } catch (e) { toast('Gagal mengganti password', 'er'); }
 }
 
+function buildKop(gid) {
+const guru = gid ? guruList.find(g => g.id == gid) : null;
+const info = guru
+? `Guru: ${guru.nama} | Mapel: ${guru.mapel} | Sekolah: ${guru.sekolah}`
+: `Sekolah: ${settings.kepsek_unit || '-'} | Kepala Sekolah: ${settings.kepsek_nama || '-'} | NIP: ${settings.kepsek_nip || '-'}`;
+return `<div class="kop-print"><h2>LAPORAN SUPERVISI AKADEMIK GURU</h2><p>${info}</p></div>`;
+}
+
 async function ctkI(key, guruId) {
 const gid = guruId || curGuru;
 if (!gid) { toast('Pilih guru terlebih dahulu!', 'wn'); return; }
 
-// Set guru & load data instrumen untuk guru ini
 curGuru = gid;
 await loadI(key);
 
-// Tampilkan hanya page instrumen ini saat cetak
+const page = document.getElementById('p-' + key);
 document.querySelectorAll('.page').forEach(p => p.classList.remove('print-show'));
-document.getElementById('p-' + key).classList.add('print-show');
+page.classList.add('print-show');
 
-// Update info kop cetak
-collectKopInfo(gid);
-
-toast('Menyiapkan cetak...', 'wn');
-window.print();
-
-// Restore: hapus class print-show
-document.querySelectorAll('.page').forEach(p => p.classList.remove('print-show'));
-}
-
-function ctkG() {
-// Tampilkan hanya page rekap saat cetak
-document.querySelectorAll('.page').forEach(p => p.classList.remove('print-show'));
-document.getElementById('p-rekap').classList.add('print-show');
+// Sisipkan kop di dalam page
+const kop = document.createElement('div');
+kop.id = 'kopTemp';
+kop.innerHTML = buildKop(gid);
+page.prepend(kop);
 
 toast('Menyiapkan cetak...', 'wn');
 window.print();
 
 // Restore
+kop.remove();
 document.querySelectorAll('.page').forEach(p => p.classList.remove('print-show'));
 }
 
-function collectKopInfo(gid) {
-const guru = guruList.find(g => g.id == gid);
-if (guru) {
-document.getElementById('kopInfo').textContent =
-`Guru: ${guru.nama} | Mapel: ${guru.mapel} | Sekolah: ${guru.sekolah}`;
-} else {
-document.getElementById('kopInfo').textContent =
-`Sekolah: ${settings.kepsek_unit || '-'} | Kepala Sekolah: ${settings.kepsek_nama || '-'} | NIP: ${settings.kepsek_nip || '-'}`;
-}
+function ctkG() {
+const page = document.getElementById('p-rekap');
+document.querySelectorAll('.page').forEach(p => p.classList.remove('print-show'));
+page.classList.add('print-show');
+
+const kop = document.createElement('div');
+kop.id = 'kopTemp';
+kop.innerHTML = buildKop(null);
+page.prepend(kop);
+
+toast('Menyiapkan cetak...', 'wn');
+window.print();
+
+kop.remove();
+document.querySelectorAll('.page').forEach(p => p.classList.remove('print-show'));
 }
 
 document.addEventListener('DOMContentLoaded', init);
