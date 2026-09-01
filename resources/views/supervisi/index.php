@@ -143,7 +143,7 @@ body{background:#fff!important;font-size:11px}
 .sidebar,.topbar,.btn,.toast-wrap,.modal-bg,.inst-sel,.tl-box,.btn-sm,.actions,.search-box{display:none!important}
 .main{margin:0!important}
 .content{padding:10px!important}
-.page{display:block!important}
+.page.print-show{display:block!important}
 .card{border:none!important;box-shadow:none!important;padding:10px 0!important}
 table{font-size:10px}table th{background:#e2e8f0!important}
 .checklist .cl-row{padding:4px 8px;font-size:10px}
@@ -1080,13 +1080,46 @@ toast(r.error || 'Gagal mengganti password', 'er');
 async function ctkI(key, guruId) {
 const gid = guruId || curGuru;
 if (!gid) { toast('Pilih guru terlebih dahulu!', 'wn'); return; }
+
+// Set guru & load data instrumen untuk guru ini
+curGuru = gid;
+await loadI(key);
+
+// Tampilkan hanya page instrumen ini saat cetak
+document.querySelectorAll('.page').forEach(p => p.classList.remove('print-show'));
+document.getElementById('p-' + key).classList.add('print-show');
+
+// Update info kop cetak
+collectKopInfo(gid);
+
 toast('Menyiapkan cetak...', 'wn');
 window.print();
+
+// Restore: hapus class print-show
+document.querySelectorAll('.page').forEach(p => p.classList.remove('print-show'));
 }
 
 function ctkG() {
+// Tampilkan hanya page rekap saat cetak
+document.querySelectorAll('.page').forEach(p => p.classList.remove('print-show'));
+document.getElementById('p-rekap').classList.add('print-show');
+
 toast('Menyiapkan cetak...', 'wn');
 window.print();
+
+// Restore
+document.querySelectorAll('.page').forEach(p => p.classList.remove('print-show'));
+}
+
+function collectKopInfo(gid) {
+const guru = guruList.find(g => g.id == gid);
+if (guru) {
+document.getElementById('kopInfo').textContent =
+`Guru: ${guru.nama} | Mapel: ${guru.mapel} | Sekolah: ${guru.sekolah}`;
+} else {
+document.getElementById('kopInfo').textContent =
+`Sekolah: ${settings.kepsek_unit || '-'} | Kepala Sekolah: ${settings.kepsek_nama || '-'} | NIP: ${settings.kepsek_nip || '-'}`;
+}
 }
 
 document.addEventListener('DOMContentLoaded', init);
