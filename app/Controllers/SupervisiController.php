@@ -513,22 +513,50 @@ class SupervisiController
                     $cells = [];
                     $cellNodes = $row->getElementsByTagNameNS('http://schemas.openxmlformats.org/spreadsheetml/2006/main', 'c');
                     foreach ($cellNodes as $cell) {
+                        // Baca referensi kolom (A1, B2, dst) lalu convert ke index
+                        $ref = $cell->getAttribute('r'); // e.g. "C3"
+                        preg_match('/^([A-Z]+)/', $ref, $m);
+                        $colIdx = 0;
+                        if (isset($m[1])) {
+                            foreach (str_split($m[1]) as $ch) {
+                                $colIdx = $colIdx * 26 + (ord($ch) - 64);
+                            }
+                            $colIdx--; // 0-based
+                        }
+
                         $val = '';
-                        $vNodes = $cell->getElementsByTagNameNS('http://schemas.openxmlformats.org/spreadsheetml/2006/main', 'v');
-                        if ($vNodes->length > 0) {
-                            $raw = $vNodes->item(0)->textContent;
-                            // t="s" means shared string index
-                            $type = $cell->getAttribute('t');
-                            if ($type === 's' && isset($sharedStrings[(int) $raw])) {
-                                $val = $sharedStrings[(int) $raw];
-                            } else {
-                                $val = $raw;
+                        $type = $cell->getAttribute('t');
+
+                        if ($type === 'inlineStr') {
+                            // Inline string: <is><t>text</t></is>
+                            $isNodes = $cell->getElementsByTagNameNS('http://schemas.openxmlformats.org/spreadsheetml/2006/main', 't');
+                            foreach ($isNodes as $t) {
+                                $val .= $t->textContent;
+                            }
+                        } else {
+                            $vNodes = $cell->getElementsByTagNameNS('http://schemas.openxmlformats.org/spreadsheetml/2006/main', 'v');
+                            if ($vNodes->length > 0) {
+                                $raw = $vNodes->item(0)->textContent;
+                                if ($type === 's' && isset($sharedStrings[(int) $raw])) {
+                                    $val = $sharedStrings[(int) $raw];
+                                } else {
+                                    $val = $raw;
+                                }
                             }
                         }
-                        $cells[] = $val;
+
+                        $cells[$colIdx] = $val;
                     }
-                    if (!empty(array_filter($cells))) {
-                        $rows[] = $cells;
+                    // Re-index: isi cell kosong yang tidak ada di XML
+                    if (!empty($cells)) {
+                        $maxCol = max(array_keys($cells));
+                        $row = [];
+                        for ($c = 0; $c <= $maxCol; $c++) {
+                            $row[] = $cells[$c] ?? '';
+                        }
+                        if (!empty(array_filter($row))) {
+                            $rows[] = $row;
+                        }
                     }
                 }
                 return $rows;
